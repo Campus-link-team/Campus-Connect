@@ -38,7 +38,9 @@ Campus-Connect/
 ├── frontend/                   # 프론트엔드 코드
 ├── backend/                    # 백엔드 코드
 ├── docs/
-│   └── data-model.md           # 초기 데이터 모델 초안
+│   ├── data-model.md           # 초기 데이터 모델 초안
+│   ├── wireframe.md            # 화면 구성 참고 예시
+│   └── images/                 # 설계 문서용 이미지
 ├── .github/
 │   └── pull_request_template.md
 ├── CONTRIBUTING.md             # 협업 방법
@@ -53,4 +55,9 @@ Campus-Connect/
 
 `main`은 안정 버전, `develop`은 개발 통합 브랜치입니다. 작업은 `develop`에서 `feature/*`, `fix/*`, `chore/*` 브랜치를 만들어 진행하고, 완료 후 `develop`으로 PR을 보냅니다. `main`과 `develop`에 직접 푸시하지 않습니다. 자세한 규칙은 [CONTRIBUTING.md](CONTRIBUTING.md)를 참고하세요.
 
-데이터 구조는 [초기 데이터 모델](docs/data-model.md)에서 확인할 수 있습니다.
+## 설계 문서
+
+- [초기 데이터 모델·쉬운 개념도](docs/data-model.md)
+- [와이어프레임 예시](docs/wireframe.md)
+
+설계 문서의 이미지는 팀 논의를 위한 참고 자료이며, 실제 DB 설계나 화면 디자인의 확정본이 아닙니다.
