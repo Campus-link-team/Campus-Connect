@@ -13,8 +13,8 @@
 
 ## 커밋 메시지 예시
 
-- `feat: add book post list`
-- `fix: correct application capacity check`
+- `feat(auth): 학교 이메일 인증 API 추가
+- "fix(login): 로그인 실패시 문구 추가"
 - `docs: describe initial data model`
 - `chore: initialize frontend project`
 
