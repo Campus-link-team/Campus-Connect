@@ -1,11 +1,7 @@
-#mysql local yml DB 연동시 유저네임 + 비밀번호 예시 (로컬이여서 마음대로 사용해도 괜찮)
+# application-local.yml로 복사한 뒤 자신의 MySQL 접속 정보를 입력합니다.
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/campus_connect
     driver-class-name: com.mysql.cj.jdbc.Driver
-    username: campus
-    password: "0000"
-
-cd ~/IdeaProjects/Campus-Connect &&
-git check-ignore -v backend/src/main/resources/application-local.yml
-#위 명령어를 통해 자기 로컬 yml 비밀번호 깃에 올라가지 않게 조심
+    username: your_mysql_username
+    password: "your_mysql_password"
