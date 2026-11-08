@@ -1,29 +1,89 @@
 
+/* ========================================
+   CampusLink - Global Design System
+   ======================================== */
+
 :root {
-  font-family: Arial, "Noto Sans KR", sans-serif;
-  color: #333333;
-  background: #ffffff;
+  /* 브랜드 컬러 */
+  --color-primary: #16834A;
+  --color-primary-hover: #116B3C;
+  --color-primary-soft: #EAF5ED;
+
+  /* 배경 및 콘텐츠 */
+  --color-background: #F5FAF6;
+  --color-surface: #FFFFFF;
+
+  /* 텍스트 */
+  --color-text: #26332B;
+  --color-text-muted: #6B756E;
+  --color-text-light: #929B95;
+
+  /* 테두리 */
+  --color-border: #E3EBE5;
+
+  /* 보조 컬러 */
+  --color-blue: #1682FF;
+  --color-blue-soft: #EAF3FF;
+
+  /* 상태 컬러 */
+  --color-success: #16834A;
+  --color-warning: #E79A32;
+  --color-danger: #D94B4B;
+
+  /* 그림자 */
+  --shadow-sm: 0 2px 8px rgba(38, 51, 43, 0.05);
+  --shadow-md: 0 5px 18px rgba(38, 51, 43, 0.08);
+
+  /* 모서리 */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+
+  /* 글꼴 */
+  font-family:
+    "Pretendard",
+    "Noto Sans KR",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+
+  color: var(--color-text);
+  background: var(--color-background);
+
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* 모든 요소의 크기 계산 기준 */
 * {
   box-sizing: border-box;
 }
 
+/* 페이지 기본 설정 */
 html {
   min-width: 320px;
+  min-height: 100%;
   scroll-behavior: smooth;
 }
 
 body {
-  margin: 0;
   min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  background: var(--color-background);
+  color: var(--color-text);
+}
+
+/* React 앱 영역 */
+#root {
+  width: 100%;
   min-height: 100vh;
 }
 
+/* 기본 글꼴 상속 */
 button,
 input,
 textarea,
@@ -31,11 +91,34 @@ select {
   font: inherit;
 }
 
-a {
-  color: inherit;
+/* 버튼 기본 설정 */
+button {
+  cursor: pointer;
 }
 
-#root {
-  width: 100%;
-  min-height: 100vh;
+/* 링크 기본 설정 */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* 이미지 기본 설정 */
+img {
+  display: block;
+  max-width: 100%;
+}
+
+/* 제목 기본 설정 */
+h1,
+h2,
+h3,
+h4,
+p {
+  margin-top: 0;
+}
+
+/* 모바일 터치 시 불필요한 확대 방지 */
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
 }

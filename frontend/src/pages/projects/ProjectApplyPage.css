@@ -1,0 +1,361 @@
+
+/* ========================================
+   CampusLink - Project Apply
+   ======================================== */
+
+.project-apply-page {
+  width: 100%;
+  max-width: 850px;
+  min-height: 650px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+
+/* 뒤로가기 */
+
+.project-apply-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 28px;
+  color: var(--color-text-muted);
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.project-apply-back:hover {
+  color: var(--color-primary);
+}
+
+/* 제목 */
+
+.project-apply-heading {
+  margin-bottom: 25px;
+}
+
+.project-apply-heading > span {
+  color: var(--color-primary);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.project-apply-heading h1 {
+  margin: 10px 0;
+  color: var(--color-text);
+  font-size: 30px;
+  font-weight: 800;
+}
+
+.project-apply-heading p {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 14px;
+}
+
+/* 프로젝트 요약 */
+
+.project-apply-summary {
+  margin-bottom: 22px;
+  padding: 24px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-background);
+}
+
+.project-apply-category {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 30px;
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.project-apply-summary h2 {
+  margin: 14px 0 9px;
+  color: var(--color-text);
+  font-size: 19px;
+}
+
+.project-apply-summary p {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+/* 신청 폼 */
+
+.project-apply-form {
+  display: flex;
+  flex-direction: column;
+  gap: 23px;
+  padding: 28px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: white;
+  box-shadow: var(--shadow-sm);
+}
+
+.project-apply-section {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.project-apply-section h2 {
+  margin: 0;
+  padding-bottom: 13px;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text);
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.project-apply-description {
+  margin: -5px 0 0;
+  color: var(--color-text-muted);
+  font-size: 12px;
+}
+
+/* 입력 필드 */
+
+.project-apply-field {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.project-apply-field label {
+  color: var(--color-text);
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.project-apply-field input,
+.project-apply-field textarea {
+  width: 100%;
+  padding: 13px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  outline: none;
+  background: white;
+  color: var(--color-text);
+  font-size: 14px;
+}
+
+.project-apply-field input {
+  height: 47px;
+}
+
+.project-apply-field textarea {
+  min-height: 145px;
+  resize: vertical;
+  line-height: 1.7;
+}
+
+.project-apply-field input:focus,
+.project-apply-field textarea:focus {
+  border-color: var(--color-primary);
+}
+
+.project-apply-field input::placeholder,
+.project-apply-field textarea::placeholder {
+  color: var(--color-text-light);
+}
+
+.project-apply-count {
+  color: var(--color-text-light);
+  font-size: 11px;
+  text-align: right;
+}
+
+/* 모집 역할 선택 */
+
+.project-apply-role-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.project-apply-role {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 16px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: white;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.project-apply-role:hover,
+.project-apply-role.is-selected {
+  border-color: var(--color-primary);
+  background: var(--color-primary-soft);
+}
+
+.project-apply-role input {
+  width: 17px;
+  height: 17px;
+  accent-color: var(--color-primary);
+}
+
+.project-apply-role-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.project-apply-role-info strong {
+  color: var(--color-text);
+  font-size: 14px;
+}
+
+.project-apply-role-info span {
+  color: var(--color-text-muted);
+  font-size: 11px;
+}
+
+.project-apply-role-count {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--color-primary);
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* 오류 */
+
+.project-apply-error {
+  padding: 13px 15px;
+  border-radius: var(--radius-sm);
+  background: #FFF0F0;
+  color: var(--color-danger);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* 신청 안내 */
+
+.project-apply-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 14px;
+  border-radius: var(--radius-sm);
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+}
+
+.project-apply-notice svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.project-apply-notice p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+/* 제출 버튼 */
+
+.project-apply-submit {
+  width: 100%;
+  min-height: 50px;
+  border: none;
+  border-radius: var(--radius-md);
+  background: var(--color-primary);
+  color: white;
+  font-size: 15px;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.project-apply-submit:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+}
+
+.project-apply-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.project-apply-test-notice {
+  margin: -13px 0 0;
+  color: var(--color-text-light);
+  font-size: 11px;
+  text-align: center;
+}
+
+/* 신청 불가 */
+
+.project-apply-closed,
+.project-apply-empty {
+  padding: 45px 25px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: white;
+  text-align: center;
+}
+
+.project-apply-closed h2,
+.project-apply-empty h1 {
+  color: var(--color-text);
+  font-size: 19px;
+}
+
+.project-apply-closed p {
+  color: var(--color-text-muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.project-apply-closed a,
+.project-apply-empty a {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 11px 17px;
+  border-radius: var(--radius-sm);
+  background: var(--color-primary);
+  color: white;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* 모바일 */
+
+@media (max-width: 480px) {
+  .project-apply-page {
+    padding: 25px 14px 50px;
+  }
+
+  .project-apply-heading h1 {
+    font-size: 25px;
+  }
+
+  .project-apply-form {
+    padding: 20px 15px;
+  }
+
+  .project-apply-summary {
+    padding: 19px;
+  }
+
+  .project-apply-role {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .project-apply-role-count {
+    margin-left: 30px;
+  }
+}
