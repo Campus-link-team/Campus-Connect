@@ -3,6 +3,7 @@ package com.campuslink.campusconnect.domain.favorite;
 import com.campuslink.campusconnect.domain.bookpost.BookPost; // 동료가 만든 클래스 임포트 필요
 // import com.campuslink.campusconnect.domain.user.User; // 추후 User 엔티티 생성 시 사용
 
+import com.campuslink.campusconnect.domain.user.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -18,16 +19,22 @@ public class Favorite {
     private Long id;
 
     // 어떤 회원이 찜했는지 (임시로 Long 타입 userId 사용)
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    //@Column(name = "user_id", nullable = false)
+    //private Long userId;
+
+    // 기존: private Long userId;
+    // 변경: 찜을 누른 회원 (N:1 연관관계)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     // 어떤 중고책 판매글을 찜했는지
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_post_id", nullable = false)
     private BookPost bookPost;
 
-    public Favorite(Long userId, BookPost bookPost) {
-        this.userId = userId;
+    public Favorite(User user, BookPost bookPost) {
+        this.user = user;
         this.bookPost = bookPost;
     }
 }
