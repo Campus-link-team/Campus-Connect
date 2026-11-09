@@ -30,6 +30,7 @@ public class ProjectPost {
     private String recruitmentStatus; // 현재 인원 모집 상태 알려줌.(초기값: "모집중")
 
     @Column(name = "current_applicant_count", nullable = false)
+    @Builder.Default
     private int currentApplicantCount = 0; // 현재 지원자 수 (초기값: 0명)
 
     @Column(name = "category")
@@ -57,5 +58,16 @@ public class ProjectPost {
         this.category = category;
         this.location = location;
 }
+
+    // 선착순 지원: 지원자 수를 1 늘리고, 정원에 도달하면 자동으로 모집 마감
+    public void apply() {
+        if ("모집완료".equals(this.recruitmentStatus) || this.currentApplicantCount >= this.capacity) {
+            throw new IllegalStateException("모집이 마감된 게시글입니다.");
+        }
+        this.currentApplicantCount++;
+        if (this.currentApplicantCount >= this.capacity) {
+            this.recruitmentStatus = "모집완료";
+        }
+    }
 //나중에 User 엔티티를 만들고 나서, 이 엔티티와 연관시켜야 한다. "누가 이 글을 썼는지" 식별하기 위해 User 객체를 참조하는 필드가 추가로 필요함.
 }
