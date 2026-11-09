@@ -10,3 +10,9 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+# JWT 설정 (3.1 인증)
+# 로컬 개발용 기본값입니다. 배포 환경에서는 JWT_SECRET 환경변수로 32자 이상 임의 문자열을 넣어 주세요.
+jwt:
+  secret: ${JWT_SECRET:campus-connect-local-dev-secret-key-change-me}
+  expiration-seconds: 3600

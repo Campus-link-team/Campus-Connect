@@ -1,4 +1,6 @@
 package com.campuslink.campusconnect.domain.user;
 
-public class UserContoller {
+public enum Role {
+    USER,
+    ADMIN
 }
