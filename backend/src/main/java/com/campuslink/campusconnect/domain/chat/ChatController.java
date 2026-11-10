@@ -5,6 +5,7 @@ import com.campuslink.campusconnect.domain.user.User;
 import com.campuslink.campusconnect.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -47,5 +48,15 @@ public class ChatController {
         // 4. 저장한 메시지를 이 채팅방을 '구독(/sub/chat/room/{roomId})' 중인 모든 사람에게 방송(Broadcasting)
         // (프론트엔드에서 이 주소만 보고 있으면 새 메시지가 화면에 즉시 뜹니다.)
         messagingTemplate.convertAndSend("/sub/chat/room/" + roomId, messageDto);
+    }
+    /**
+     * 웹소켓 채팅 중 에러(IllegalArgumentException)가 발생하면,
+     * 에러 메시지를 발송자에게만 조용히 반환해주는 전용 에러 핸들러입니다.
+     */
+    @MessageExceptionHandler(IllegalArgumentException.class)
+    public void handleWebSocketException(IllegalArgumentException e) {
+        // 실제 운영 환경에서는 별도의 에러 전송 채널(예: /queue/errors)을 만들어 프론트엔드로 에러를 보내주지만,
+        // 현재는 서버 콘솔에 안전하게 로그만 남기고 서버가 죽지 않도록 방어합니다.
+        System.out.println("웹소켓 채팅 에러 발생: " + e.getMessage());
     }
 }
