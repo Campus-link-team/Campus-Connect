@@ -3,17 +3,41 @@ package com.campuslink.campusconnect.domain.projectpost;
 import com.campuslink.campusconnect.domain.projectpost.dto.ProjectPostCreateRequest;
 import com.campuslink.campusconnect.domain.projectpost.dto.ProjectPostResponse;
 import com.campuslink.campusconnect.domain.projectpost.dto.ProjectPostUpdateRequest;
+import com.campuslink.campusconnect.domain.user.User;
+import com.campuslink.campusconnect.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.campuslink.campusconnect.domain.projectpost.dto.ProjectPostDto;
 
 @Service //해당 클래스가 비즈니스 로직을 처리하는 서비스 계층(Service Layer)의 컴포넌트임을 명시하는 데 사용
 @RequiredArgsConstructor // final이 붙은 필드의 생성자를 자동으로 만들어준다. (의존성 주입)
 
 public class ProjectPostService {
     private final ProjectPostRepository projectPostRepository;
+    // 1. 유저를 찾기 위해 UserRepository를 주입받습니다.
+    private final UserRepository userRepository;
 
     @Transactional // 데이터베이스의 상태를 변경(저장, 수정, 삭제)할 때 붙여줍니다.
+    public void createPost(ProjectPostDto requestDto, Long userId) {
+        // 2. 컨트롤러에서 넘겨받은 userId로 DB에서 작성자(User)를 조회합니다.
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다. id=" + userId));
+
+        // 3. ProjectPost 객체를 생성할 때 조회해 온 user를 함께 넘겨줍니다.
+        ProjectPost post = new ProjectPost(
+                requestDto.getTitle(),
+                requestDto.getContent(),
+                requestDto.getCapacity(),
+                requestDto.getCategory(),
+                requestDto.getLocation(),
+                user // ★ 변경된 부분
+        );
+
+        // 4. DB에 저장
+        projectPostRepository.save(post);
+    }
+    /*
     public Long createProjectPost( ProjectPostCreateRequest request) {
         // 1. DTO 데이터를 바탕으로 새로운 ProjectPost 엔티티를 만든다.
         // 주의: ProjectPost 클래스에 @Builder 어노테이션이 없다면, 생성자를 통해 만들어야 한다.
@@ -24,14 +48,14 @@ public class ProjectPostService {
 
         // 빌더 패턴을 사용한다고 가정했을 때의 예시:
 
-        /*
+
         ProjectPost projectPost = ProjectPost.builder()
                 .title(request.getTitle())
                 .content(request.getContent())
                 .capacity(request.getCapacity())
                 .recruitmentStatus("모집중") // 초기 상태 고정
                 .build();
-        */
+
         ProjectPost projectPost = ProjectPost.builder()
                 .title(request.getTitle())
                 .content(request.getContent())
@@ -52,7 +76,7 @@ public class ProjectPostService {
         // 3. 생성된 게시글의 ID를 반환한다.
         return savedPost.getId();
     }
-
+    */
     // 조회 로직이므로 (readOnly = true)를 주면 성능이 약간 향상된다.
     @Transactional(readOnly = true)
     public ProjectPostResponse getProjectPost(Long id) {

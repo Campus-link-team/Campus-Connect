@@ -6,6 +6,7 @@ import com.campuslink.campusconnect.domain.projectpost.dto.ProjectPostUpdateRequ
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.campuslink.campusconnect.domain.projectpost.dto.ProjectPostDto;
 
 @RestController //HTTP 요청을 받아 뷰(HTML 등) 대신 객체나 데이터(JSON, XML 등)를 직접 HTTP 응답 본문(Response Body)에 반환하는 특수 컨트롤러 어노테이션
 @RequestMapping("/api/projects") // 이 컨트롤러의 기본 URL 경로, 아직 모름
@@ -14,6 +15,19 @@ import org.springframework.web.bind.annotation.*;
 public class ProjectPostController {
     private final ProjectPostService projectPostService;
 
+    // POST /api/projects?userId=1
+    @PostMapping
+    public ResponseEntity<String> createProjectPost(
+            @RequestBody ProjectPostDto requestDto,
+            @RequestParam Long userId) { // ★ 쿼리 파라미터로 userId를 받도록 추가
+
+        // 서비스의 게시글 생성 로직 실행
+        projectPostService.createPost(requestDto, userId);
+
+        return ResponseEntity.ok("게시글이 성공적으로 생성되었습니다.");
+    }
+
+    /*
     // POST /api/projects 요청이 오면 이 메서드가 실행됨.
     @PostMapping
     public ResponseEntity<Long> createPost(@RequestBody ProjectPostCreateRequest request) {
@@ -23,6 +37,7 @@ public class ProjectPostController {
         // 성공적으로 생성되었다는 응답(200 OK)과 함께 ID를 반환합니다.
         return ResponseEntity.ok(postId);
     }
+    */
     // GET /api/projects/{id} 요청이 오면 이 메서드가 실행됩니다.
     @GetMapping("/{id}")
     public ResponseEntity<ProjectPostResponse> getPost(@PathVariable Long id) {
