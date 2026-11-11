@@ -36,7 +36,8 @@ public class ProjectApplicationService {
         post.apply();
 
         // 5. 지원 내역 DB 저장 (userId 대신 조회해 온 user 객체를 넣습니다)
-        ProjectApplication application = new ProjectApplication(post, user);
+        // 주의: 이 서비스는 옛날 방식이므로 임시로 빈 문자열을 넣습니다.
+        ProjectApplication application = new ProjectApplication(post, user, "역할 미지정", "동기 없음");
         projectApplicationRepository.save(application);
     }
 }
