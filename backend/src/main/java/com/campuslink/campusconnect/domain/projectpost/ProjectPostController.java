@@ -1,59 +1,84 @@
 package com.campuslink.campusconnect.domain.projectpost;
 
-import com.campuslink.campusconnect.domain.projectpost.dto.ProjectPostCreateRequest;
-import com.campuslink.campusconnect.domain.projectpost.dto.ProjectPostResponse;
-import com.campuslink.campusconnect.domain.projectpost.dto.ProjectPostUpdateRequest;
+import com.campuslink.campusconnect.domain.projectpost.dto.*;
+import com.campuslink.campusconnect.global.common.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.campuslink.campusconnect.domain.projectpost.dto.ProjectPostDto;
 
-@RestController //HTTP 요청을 받아 뷰(HTML 등) 대신 객체나 데이터(JSON, XML 등)를 직접 HTTP 응답 본문(Response Body)에 반환하는 특수 컨트롤러 어노테이션
-@RequestMapping("/api/projects") // 이 컨트롤러의 기본 URL 경로, 아직 모름
-@RequiredArgsConstructor //final이나 @NonNull이 붙은 필드를 매개변수로 갖는 생성자를 자동으로 생성해줌.
+import java.util.List;
 
+@RestController
+@RequestMapping("/api/v1/projects") // 프론트엔드 명세서에 맞춘 공통 경로
+@RequiredArgsConstructor
 public class ProjectPostController {
+
     private final ProjectPostService projectPostService;
 
-    // POST /api/projects?userId=1
+    // 1. 단건 상세 조회 (기존 getProjectPost 활용 + ApiResponse 포장)
+    @GetMapping("/{projectId}")
+    public ResponseEntity<ApiResponse<ProjectPostResponse>> getProjectDetail(@PathVariable Long projectId) {
+        ProjectPostResponse response = projectPostService.getProjectPost(projectId);
+        return ResponseEntity.ok(ApiResponse.success(response));
+    }
+
+    // 2. 모집글 작성 (기존 createPost 활용 + userId 쿼리 파라미터 유지)
     @PostMapping
-    public ResponseEntity<String> createProjectPost(
+    public ResponseEntity<ApiResponse<String>> createProject(
             @RequestBody ProjectPostDto requestDto,
-            @RequestParam Long userId) { // ★ 쿼리 파라미터로 userId를 받도록 추가
-
-        // 서비스의 게시글 생성 로직 실행
+            @RequestParam Long userId) {
         projectPostService.createPost(requestDto, userId);
-
-        return ResponseEntity.ok("게시글이 성공적으로 생성되었습니다.");
+        return ResponseEntity.status(201).body(ApiResponse.success("게시글이 성공적으로 생성되었습니다."));
     }
 
-    /*
-    // POST /api/projects 요청이 오면 이 메서드가 실행됨.
-    @PostMapping
-    public ResponseEntity<Long> createPost(@RequestBody ProjectPostCreateRequest request) {
-        // 서비스의 로직을 호출하여 게시글을 생성하고, 생성된 ID를 받음.
-        Long postId = projectPostService.createProjectPost(request);
+    // 3. 모집글 수정 (기존 updateProjectPost 활용 + 프론트 명세서에 맞춰 PatchMapping)
+    @PatchMapping("/{projectId}")
+    public ResponseEntity<ApiResponse<Long>> updateProject(
+            @PathVariable Long projectId,
+            @RequestBody ProjectPostUpdateRequest request) {
+        Long updatedId = projectPostService.updateProjectPost(projectId, request);
+        return ResponseEntity.ok(ApiResponse.success(updatedId));
+    }
 
-        // 성공적으로 생성되었다는 응답(200 OK)과 함께 ID를 반환합니다.
-        return ResponseEntity.ok(postId);
+    // 4. 모집글 삭제 (기존 deleteProjectPost 활용)
+    @DeleteMapping("/{projectId}")
+    public ResponseEntity<ApiResponse<Void>> deleteProject(@PathVariable Long projectId) {
+        projectPostService.deleteProjectPost(projectId);
+        return ResponseEntity.ok(ApiResponse.success(null));
     }
-    */
-    // GET /api/projects/{id} 요청이 오면 이 메서드가 실행됩니다.
-    @GetMapping("/{id}")
-    public ResponseEntity<ProjectPostResponse> getPost(@PathVariable Long id) {
-        ProjectPostResponse response = projectPostService.getProjectPost(id);
-        return ResponseEntity.ok(response);
+
+    // =========================================================================
+    // [주의] 아래 두 기능은 아직 Service 로직과 DTO가 없어서 주석 처리해 두었습니다.
+    // 에러 없이 서버가 켜지는 것을 확인한 후, 다음 스텝에서 채워 넣을 예정입니다!
+    // =========================================================================
+
+
+    // 5. 프로젝트 목록 조회 (분야, 역할 필터링 등)
+    @GetMapping
+    public ResponseEntity<ApiResponse<List<ProjectPostResponse>>> getProjects(
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String role,
+            @RequestParam(required = false) String sort) {
+        List<ProjectPostResponse> projectList = projectPostService.getProjects(category, role, sort);
+        return ResponseEntity.ok(ApiResponse.success(projectList));
     }
-    // 수정 (Update)
-    @PutMapping("/{id}")
-    public ResponseEntity<Long> updatePost(@PathVariable Long id, @RequestBody ProjectPostUpdateRequest request) {
-        Long updatedId = projectPostService.updateProjectPost(id, request);
-        return ResponseEntity.ok(updatedId);
+
+    // 6. 프로젝트 지원하기
+    @PostMapping("/{projectId}/applications")
+    public ResponseEntity<ApiResponse<Void>> applyProject(
+            @PathVariable Long projectId,
+            @RequestBody ApplicationRequest request) { // ApplicationRequest DTO 추후 생성
+        projectPostService.applyProject(projectId, request);
+        return ResponseEntity.status(201).body(ApiResponse.success(null));
     }
-    // 삭제 (Delete)
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePost(@PathVariable Long id) {
-        projectPostService.deleteProjectPost(id);
-        return ResponseEntity.ok().build();
+
+    // 7. 지원자 승인/거절 처리
+    @PatchMapping("/{projectId}/applications/{applicationId}")
+    public ResponseEntity<ApiResponse<Void>> updateApplicationStatus(
+            @PathVariable Long projectId,
+            @PathVariable Long applicationId,
+            @RequestBody ApplicationStatusRequest request) {
+        projectPostService.updateApplicationStatus(applicationId, request);
+        return ResponseEntity.ok(ApiResponse.success(null));
     }
 }

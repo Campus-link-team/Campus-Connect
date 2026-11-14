@@ -1,38 +1,17 @@
 package com.campuslink.campusconnect.domain.projectpost.dto;
 
-import com.campuslink.campusconnect.domain.projectpost.ProjectPost;
+import com.campuslink.campusconnect.domain.user.User;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import java.time.LocalDate;
 
-// 게시글의 모든 정보(id, 상태, 현재 인원 포함)를 담아 프론트엔드로 전달할 객체
 @Getter
+@AllArgsConstructor
 public class ProjectPostResponse {
-    private Long id;
-    private String title;
-    private String content;
-    private int capacity;
-    private String recruitmentStatus;
-    private int currentApplicantCount;
-    private String category;
-    private LocalDate startDate;
-    private LocalDate endDate;
-    private String location;
-    private String qualifications;
-    private String tags;
+    private Long id;          // 프로젝트 고유 번호
+    private String title;     // 프로젝트 제목
+    private User user;        // 작성자 정보 (나중에 프론트엔드 요구사항에 맞춰 이름(String)만 주도록 바꿀 수도 있습니다)
+    private String startDate; // 프로젝트 시작 날짜 (문자열 형태)
 
-    // Entity를 받아서 DTO로 변환해 주는 생성자
-    public ProjectPostResponse(ProjectPost post) {
-        this.id = post.getId();
-        this.title = post.getTitle();
-        this.content = post.getContent();
-        this.capacity = post.getCapacity();
-        this.recruitmentStatus = post.getRecruitmentStatus();
-        this.currentApplicantCount = post.getCurrentApplicantCount();
-        this.category = post.getCategory();
-        this.startDate = post.getStartDate();
-        this.endDate = post.getEndDate();
-        this.location = post.getLocation();
-        this.qualifications = post.getQualifications();
-        this.tags = post.getTags();
-    }
+    // 만약 예전에 다른 필드(예: content 등)를 하나만 선언해두셨다면,
+    // 그 필드를 지우고 위 4개의 필드로 통일해주시면 됩니다.
 }
