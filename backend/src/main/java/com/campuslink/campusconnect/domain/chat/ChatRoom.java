@@ -1,42 +1,64 @@
 package com.campuslink.campusconnect.domain.chat;
 
-import com.campuslink.campusconnect.domain.bookpost.BookPost;
 import com.campuslink.campusconnect.domain.user.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EntityListeners(AuditingEntityListener.class) // 생성 시간 자동 기록용
 public class ChatRoom {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 대화가 일어나는 대상 게시글
+    // "BOOK" 또는 "PROJECT"
+    @Column(name = "context_type", nullable = false)
+    private String contextType;
+
+    // 대상 게시글 ID (중고책 ID 또는 프로젝트 모집글 ID)
+    @Column(name = "context_id", nullable = false)
+    private Long contextId;
+
+    // 채팅방을 먼저 연 사용자
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "book_post_id", nullable = false)
-    private BookPost bookPost;
+    @JoinColumn(name = "user1_id", nullable = false)
+    private User user1;
 
-    // 채팅을 먼저 건 사람 (구매 희망자)
+    // 채팅 상대방 (게시글 작성자 등)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "buyer_id", nullable = false)
-    private User buyer;
+    @JoinColumn(name = "user2_id", nullable = false)
+    private User user2;
 
-    @CreatedDate
-    @Column(updatable = false)
-    private LocalDateTime createdAt; // 채팅방 생성 시각
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
 
-    public ChatRoom(BookPost bookPost, User buyer) {
-        this.bookPost = bookPost;
-        this.buyer = buyer;
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    public ChatRoom(String contextType, Long contextId, User user1, User user2) {
+        this.contextType = contextType;
+        this.contextId = contextId;
+        this.user1 = user1;
+        this.user2 = user2;
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public boolean isParticipant(Long userId) {
+        return user1.getId().equals(userId) || user2.getId().equals(userId);
+    }
+
+    public User getOpponent(Long myUserId) {
+        return user1.getId().equals(myUserId) ? user2 : user1;
+    }
+
+    public void updateLastActivity() {
+        this.updatedAt = LocalDateTime.now();
     }
 }
