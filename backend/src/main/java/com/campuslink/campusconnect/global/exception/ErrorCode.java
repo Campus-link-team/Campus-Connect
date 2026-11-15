@@ -15,6 +15,7 @@ public enum ErrorCode {
     LOGIN_FAILED(HttpStatus.UNAUTHORIZED, "이메일 또는 비밀번호가 일치하지 않습니다."),
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "인증이 필요합니다."),
     TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "토큰이 만료되었습니다. 다시 로그인해 주세요."),
+    CONFLICT(HttpStatus.CONFLICT, "요청을 처리할 수 없는 상태입니다."),
     FORBIDDEN(HttpStatus.FORBIDDEN, "접근 권한이 없습니다.");
 
     private final HttpStatus status;

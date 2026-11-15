@@ -41,10 +41,18 @@ public class User {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
+    @Column(length = 50)
+    private String department; // 학과 (선택)
+
     public User(String email, String encodedPassword, String nickname) {
+        this(email, encodedPassword, nickname, null);
+    }
+
+    public User(String email, String encodedPassword, String nickname, String department) {
         this.email = email;
         this.password = encodedPassword;
         this.nickname = nickname;
+        this.department = department;
         this.role = Role.USER;
     }
 }

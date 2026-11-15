@@ -33,7 +33,7 @@ public class AuthService {
             throw new BusinessException(ErrorCode.NICKNAME_ALREADY_EXISTS);
         }
 
-        User user = new User(email, passwordEncoder.encode(request.password()), nickname);
+        User user = new User(email, passwordEncoder.encode(request.password()), nickname, request.department());
         return SignupResponse.from(userRepository.save(user));
     }
 
