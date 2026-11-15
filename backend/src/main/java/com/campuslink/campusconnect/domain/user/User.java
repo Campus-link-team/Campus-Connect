@@ -2,13 +2,16 @@ package com.campuslink.campusconnect.domain.user;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "users") // user는 MySQL 예약어와 겹칠 수 있어 users로 지정
 @Getter
-@Table(name = "users") // MySQL 예약어와의 충돌을 방지하기 위해 테이블명을 users로 지정합니다.
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
 
@@ -16,25 +19,40 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
-    private String email; // 학교 이메일 (아이디)
+    // 학교 이메일 = 로그인 아이디
+    @Column(nullable = false, unique = true, length = 100)
+    private String email;
 
+    // BCrypt로 해시된 비밀번호 (원문 저장 금지)
     @Column(nullable = false)
-    private String password; // 비밀번호
+    private String password;
 
-    @Column(nullable = false)
-    private String name; // 사용자 이름
+    @Column(nullable = false, unique = true, length = 15)
+    private String nickname;
 
-    private String nickname; // 닉네임
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private Role role;
 
-    private String department; // 학과
+    @CreationTimestamp
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
 
-    @Builder
-    public User(String email, String password, String name, String nickname, String department) {
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
+
+    @Column(length = 50)
+    private String department; // 학과 (선택)
+
+    public User(String email, String encodedPassword, String nickname) {
+        this(email, encodedPassword, nickname, null);
+    }
+
+    public User(String email, String encodedPassword, String nickname, String department) {
         this.email = email;
-        this.password = password;
-        this.name = name;
+        this.password = encodedPassword;
         this.nickname = nickname;
         this.department = department;
+        this.role = Role.USER;
     }
 }

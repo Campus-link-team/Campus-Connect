@@ -7,7 +7,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public class MyPageResponse {
     private String email;
-    private String name;
     private String nickname;
     private String department;
 
