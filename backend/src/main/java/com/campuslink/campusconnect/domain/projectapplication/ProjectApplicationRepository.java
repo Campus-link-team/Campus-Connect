@@ -16,6 +16,8 @@ public interface ProjectApplicationRepository extends JpaRepository<ProjectAppli
     // 2. 특정 게시글에 지원한 모든 내역을 가져오는 메서드 (나중에 지원자 목록 볼 때 사용)
     List<ProjectApplication> findAllByProjectPost(ProjectPost projectPost);
 
+    List<ProjectApplication> findAllByProjectPostAndStatus(ProjectPost projectPost, String status);
+
     // 3. 특정 회원이 지원한 모든 내역을 가져오는 메서드 (마이페이지에서 내 지원 내역 볼 때 사용)
     List<ProjectApplication> findAllByUserId(Long userId);
 

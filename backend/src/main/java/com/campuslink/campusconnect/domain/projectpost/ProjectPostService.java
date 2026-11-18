@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service //해당 클래스가 비즈니스 로직을 처리하는 서비스 계층(Service Layer)의 컴포넌트임을 명시하는 데 사용
 @RequiredArgsConstructor // final이 붙은 필드의 생성자를 자동으로 만들어준다. (의존성 주입)
@@ -91,7 +90,8 @@ public class ProjectPostService {
                 projectPost.getId(),
                 projectPost.getTitle(),
                 projectPost.getUser(),
-                projectPost.getStartDate() != null ? projectPost.getStartDate().toString() : "미정"
+                projectPost.getStartDate() != null ? projectPost.getStartDate().toString() : "미정",
+                projectPost.getRecruitmentStatus()
         );
     }
 
@@ -100,8 +100,13 @@ public class ProjectPostService {
         ProjectPost projectPost = projectPostRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("게시글이 없습니다. id=" + id));
 
-        // 엔티티의 값을 변경하면, @Transactional에 의해 메서드가 끝날 때 DB에 자동으로 반영(Update)됩니다. (Dirty Checking)
-        projectPost.updatePost(request.getTitle(), request.getContent(), request.getCapacity(), request.getCategory(), request.getLocation());
+        projectPost.updatePost(
+                request.getTitle(),
+                request.getContent(),
+                request.getCapacity(),
+                request.getCategory(),
+                request.getLocation()
+        );
 
         return projectPost.getId();
     }
@@ -112,34 +117,50 @@ public class ProjectPostService {
                 .orElseThrow(() -> new IllegalArgumentException("게시글이 없습니다. id=" + id));
         projectPostRepository.delete(projectPost);
     }
-    // 1. 프로젝트 목록 조회 (프론트 필터링 대응)
+    // 프로젝트 목록 조회 (category, status 필터 대응)
     @Transactional(readOnly = true)
-    public List<ProjectPostResponse> getProjects(String category, String role, String sort) {
-        // 실제로는 Repository에서 category, role 등의 조건에 맞는 데이터를
-        // 쿼리(QueryDSL 등)로 가져와야 하지만, 현재는 테스트를 위해 전체 목록을 반환합니다.
-        // 프론트엔드 연동 테스트를 위해 데이터가 넘어가는지 확인하는 용도입니다.
+    public List<ProjectPostResponse> getProjects(String category, String role, String sort, String status) {
+        if (status != null && !status.isBlank()
+                && !"RECRUITING".equalsIgnoreCase(status)
+                && !"CLOSED".equalsIgnoreCase(status)) {
+            throw new IllegalArgumentException("유효하지 않은 모집 상태 필터입니다: " + status);
+        }
+
         List<ProjectPost> posts = projectPostRepository.findAll();
 
         return posts.stream()
+                .filter(post -> category == null || category.isBlank()
+                        || (post.getCategory() != null && post.getCategory().equalsIgnoreCase(category)))
+                .filter(post -> status == null || status.isBlank()
+                        || status.equalsIgnoreCase(post.getRecruitmentStatus()))
                 .map(post -> new ProjectPostResponse(
                         post.getId(),
                         post.getTitle(),
                         post.getUser(),
-                        post.getStartDate().toString()))
+                        post.getStartDate() != null ? post.getStartDate().toString() : "미정",
+                        post.getRecruitmentStatus()))
                 .toList();
     }
 
     // 2. 프로젝트 지원하기 (DB 연동 완성)
     @Transactional
-    public void applyProject(Long projectId, ApplicationRequest request) {
+    public void applyProject(Long projectId, Long userId, ApplicationRequest request) {
         // 1) 지원하려는 프로젝트 게시글을 DB에서 찾습니다.
         ProjectPost projectPost = projectPostRepository.findById(projectId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 프로젝트를 찾을 수 없습니다. id=" + projectId));
 
+        if ("CLOSED".equals(projectPost.getRecruitmentStatus())) {
+            throw new IllegalStateException("모집이 마감된 프로젝트에는 지원할 수 없습니다.");
+        }
+
         // 2) 현재 로그인한 사용자 정보를 가져옵니다.
         // (현재는 테스트를 위해 임의의 2번 유저를 하드코딩합니다. 추후 시큐리티 연동 필요)
-        User currentUser = userRepository.findById(2L)
-                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+        User currentUser = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다. id=" + userId));
+
+        if (projectPost.getUser() != null && projectPost.getUser().getId().equals(userId)) {
+            throw new IllegalStateException("본인이 작성한 모집글에는 지원할 수 없습니다.");
+        }
 
         // 3) 중복 지원 방지 검증 (Repository에 만들어둔 메서드 활용!)
         if (projectApplicationRepository.existsByProjectPostAndUser(projectPost, currentUser)) {
@@ -150,25 +171,94 @@ public class ProjectPostService {
         ProjectApplication application = new ProjectApplication(
                 projectPost,
                 currentUser,
-                request.getRoleName(),      // 추가됨!
-                request.getIntroduction()   // 추가됨!
+                request.getRoleName(),
+                request.getIntroduction()
         );
 
         projectApplicationRepository.save(application);
     }
-    // 3. 지원자 승인/거절 처리
-    @Transactional
-    public void updateApplicationStatus(Long applicationId, ApplicationStatusRequest request) {
+
+    // 3. 지원자 승인/거절 처리 (작성자만 가능, 이미 처리된 지원 재처리 불가)
+    public void updateApplicationStatus(Long projectId, Long applicationId, Long userId, ApplicationStatusRequest request) {
         ProjectApplication application = projectApplicationRepository.findById(applicationId)
-                .orElseThrow(() -> new IllegalArgumentException("지원 내역을 찾을 수 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("지원 내역을 찾을 수 없습니다. id=" + applicationId));
 
-        // 프론트에서 넘어온 상태("승인" 또는 "거절")로 업데이트
-        application.updateStatus(request.getStatus());
+        ProjectPost post = application.getProjectPost();
+        if (!post.getId().equals(projectId)) {
+            throw new IllegalArgumentException("해당 모집글의 지원 내역이 아닙니다.");
+        }
 
-        // '승인' 처리인 경우, 게시글의 현재 인원수를 1명 늘리고 정원 체크
-        if ("승인".equals(request.getStatus())) {
-            ProjectPost post = application.getProjectPost();
-            post.apply();
+        // 1. 모집글 작성자 본인 검증
+        if (post.getUser() == null || !post.getUser().getId().equals(userId)) {
+            throw new IllegalStateException("모집글 작성자만 지원을 승인하거나 거절할 수 있습니다.");
+        }
+
+        // 2. 이미 처리된 지원 재처리 방지
+        if (!"PENDING".equals(application.getStatus())) {
+            throw new IllegalStateException("이미 처리된 지원 내역입니다.");
+        }
+
+        // 3. 상태값 검증 (APPROVED / REJECTED)
+        String newStatus = request.getStatus();
+        if (!"APPROVED".equals(newStatus) && !"REJECTED".equals(newStatus)) {
+            throw new IllegalArgumentException("유효하지 않은 지원 상태값입니다: " + newStatus);
+        }
+
+        application.updateStatus(newStatus);
+
+        // 4. APPROVED인 경우 정원 체크 및 현재 인원수 증가
+        if ("APPROVED".equals(newStatus)) {
+            ProjectPost lockedPost = projectPostRepository.findByIdWithPessimisticLock(projectId)
+                    .orElseThrow(() -> new IllegalArgumentException("해당 게시글을 찾을 수 없습니다. id=" + projectId));
+            lockedPost.apply();
+
+            // 정원이 다 차서 마감된 경우, 남은 PENDING 지원 자동 거절
+            if ("CLOSED".equals(lockedPost.getRecruitmentStatus())) {
+                rejectRemainingPendingApplications(lockedPost);
+        }
+    }
+}
+
+    // 5 & 6. 모집 직접 마감 + 남은 PENDING 지원 자동 거절 (작성자만 가능)
+    @Transactional
+    public void closeProject(Long projectId, Long userId) {
+        ProjectPost post = projectPostRepository.findByIdWithPessimisticLock(projectId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글을 찾을 수 없습니다. id=" + projectId));
+
+        if (post.getUser() == null || !post.getUser().getId().equals(userId)) {
+            throw new IllegalStateException("모집글 작성자만 마감할 수 있습니다.");
+        }
+
+        post.close();
+        rejectRemainingPendingApplications(post);
+    }
+
+    // 7. 지원 취소 (본인 & PENDING 상태일 때만 가능)
+    @Transactional
+    public void cancelApplication(Long projectId, Long applicationId, Long userId) {
+        ProjectApplication application = projectApplicationRepository.findById(applicationId)
+                .orElseThrow(() -> new IllegalArgumentException("지원 내역을 찾을 수 없습니다. id=" + applicationId));
+
+        if (!application.getProjectPost().getId().equals(projectId)) {
+            throw new IllegalArgumentException("해당 모집글의 지원 내역이 아닙니다.");
+        }
+
+        if (application.getUser() == null || !application.getUser().getId().equals(userId)) {
+            throw new IllegalStateException("본인의 지원 내역만 취소할 수 있습니다.");
+        }
+
+        if (!"PENDING".equals(application.getStatus())) {
+            throw new IllegalStateException("대기 중인(PENDING) 지원만 취소할 수 있습니다.");
+        }
+
+        projectApplicationRepository.delete(application);
+    }
+
+    private void rejectRemainingPendingApplications(ProjectPost post) {
+        List<ProjectApplication> pendingApplications =
+                projectApplicationRepository.findAllByProjectPostAndStatus(post, "PENDING");
+        for (ProjectApplication pending : pendingApplications) {
+            pending.updateStatus("REJECTED");
         }
     }
 }

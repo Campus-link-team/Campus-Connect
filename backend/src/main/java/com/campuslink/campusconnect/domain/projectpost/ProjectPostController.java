@@ -2,6 +2,7 @@ package com.campuslink.campusconnect.domain.projectpost;
 
 import com.campuslink.campusconnect.domain.projectpost.dto.*;
 import com.campuslink.campusconnect.global.common.ApiResponse;
+import com.campuslink.campusconnect.global.security.LoginUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +27,7 @@ public class ProjectPostController {
     @PostMapping
     public ResponseEntity<ApiResponse<String>> createProject(
             @RequestBody ProjectPostDto requestDto,
-            @RequestParam Long userId) {
+            @LoginUser Long userId) {
         projectPostService.createPost(requestDto, userId);
         return ResponseEntity.status(201).body(ApiResponse.success("게시글이 성공적으로 생성되었습니다."));
     }
@@ -58,8 +59,9 @@ public class ProjectPostController {
     public ResponseEntity<ApiResponse<List<ProjectPostResponse>>> getProjects(
             @RequestParam(required = false) String category,
             @RequestParam(required = false) String role,
-            @RequestParam(required = false) String sort) {
-        List<ProjectPostResponse> projectList = projectPostService.getProjects(category, role, sort);
+            @RequestParam(required = false) String sort,
+            @RequestParam(required = false) String status) {
+        List<ProjectPostResponse> projectList = projectPostService.getProjects(category, role, sort, status);
         return ResponseEntity.ok(ApiResponse.success(projectList));
     }
 
@@ -67,18 +69,39 @@ public class ProjectPostController {
     @PostMapping("/{projectId}/applications")
     public ResponseEntity<ApiResponse<Void>> applyProject(
             @PathVariable Long projectId,
-            @RequestBody ApplicationRequest request) { // ApplicationRequest DTO 추후 생성
-        projectPostService.applyProject(projectId, request);
+            @LoginUser Long userId,
+            @RequestBody ApplicationRequest request) {
+        projectPostService.applyProject(projectId, userId, request);
         return ResponseEntity.status(201).body(ApiResponse.success(null));
     }
 
-    // 7. 지원자 승인/거절 처리
+    // 7. 지원자 승인/거절 처리 (@LoginUser 전환)
     @PatchMapping("/{projectId}/applications/{applicationId}")
     public ResponseEntity<ApiResponse<Void>> updateApplicationStatus(
             @PathVariable Long projectId,
             @PathVariable Long applicationId,
+            @LoginUser Long userId,
             @RequestBody ApplicationStatusRequest request) {
-        projectPostService.updateApplicationStatus(applicationId, request);
+        projectPostService.updateApplicationStatus(projectId, applicationId, userId, request);
+        return ResponseEntity.ok(ApiResponse.success(null));
+    }
+
+    // 8. 모집 직접 마감 (작성자만 가능)
+    @PatchMapping("/{projectId}/close")
+    public ResponseEntity<ApiResponse<Void>> closeProject(
+            @PathVariable Long projectId,
+            @LoginUser Long userId) {
+        projectPostService.closeProject(projectId, userId);
+        return ResponseEntity.ok(ApiResponse.success(null));
+    }
+
+    // 9. 지원 취소 (본인, PENDING일 때만 가능)
+    @DeleteMapping("/{projectId}/applications/{applicationId}")
+    public ResponseEntity<ApiResponse<Void>> cancelApplication(
+            @PathVariable Long projectId,
+            @PathVariable Long applicationId,
+            @LoginUser Long userId) {
+        projectPostService.cancelApplication(projectId, applicationId, userId);
         return ResponseEntity.ok(ApiResponse.success(null));
     }
 }
