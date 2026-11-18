@@ -38,7 +38,7 @@ public class ProjectApplication {
 
     // ... 기존 필드들 아래에 추가 ...
     @Column(name = "status", nullable = false)
-    private String status = "승인 대기"; // "승인 대기", "승인", "거절"
+    private String status = "PENDING"; // // "PENDING", "APPROVED", "REJECTED"
 
     public void updateStatus(String status) {
         this.status = status;
@@ -51,5 +51,6 @@ public class ProjectApplication {
         this.roleName = roleName;
         this.introduction = introduction;
         this.appliedAt = LocalDateTime.now();
+        this.status = "PENDING";
     }
 }

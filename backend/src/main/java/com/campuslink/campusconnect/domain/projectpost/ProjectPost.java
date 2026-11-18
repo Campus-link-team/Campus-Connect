@@ -27,9 +27,11 @@ public class ProjectPost {
     @Column(name = "capacity", nullable = false)
     private int capacity; //최대 수용 가능 인원
 
+    @Builder.Default
     @Column(name = "recruitment_status", nullable = false)
-    private String recruitmentStatus; // 현재 인원 모집 상태 알려줌.(초기값: "모집중")
+    private String recruitmentStatus = "RECRUITING"; // 현재 인원 모집 상태 알려줌.// RECRUITING, CLOSED
 
+    @Builder.Default
     @Column(name = "current_applicant_count", nullable = false)
     private int currentApplicantCount = 0; // 현재 지원자 수 (초기값: 0명)
 
@@ -51,33 +53,11 @@ public class ProjectPost {
     @Column(name = "tags")
     private String tags; // 키워드 (예: "#웹개발,#프로젝트" 형태로 쉼표로 구분해서 저장)
 
-    public void updatePost(String title, String content, int capacity, String category, String location) {
-        this.title = title;
-        this.content = content;
-        this.capacity = capacity;
-        this.category = category;
-        this.location = location;
-}
-    // 지원자가 발생했을 때 호출할 메서드
-    public void apply() {
-        // 1. 이미 정원이 꽉 찼는지 확인
-        if (this.currentApplicantCount >= this.capacity) {
-            throw new IllegalStateException("이미 정원이 마감된 모집글입니다.");
-        }
-
-        // 2. 지원자 수 1명 증가
-        this.currentApplicantCount++;
-
-        // 3. 증가시켰더니 정원과 같아졌다면, 상태를 "모집완료"로 자동 변경
-        if (this.currentApplicantCount == this.capacity) {
-            this.recruitmentStatus = "모집완료";
-        }
-    }
-//나중에 User 엔티티를 만들고 나서, 이 엔티티와 연관시켜야 한다. "누가 이 글을 썼는지" 식별하기 위해 User 객체를 참조하는 필드가 추가로 필요함.
-// N:1 관계 (여러 모집글은 한 명의 작성자에 의해 작성됨)
-@ManyToOne(fetch = FetchType.LAZY)
-@JoinColumn(name = "user_id")
-private User user; // 게시글 작성자
+    //"누가 이 글을 썼는지" 식별하기 위해 User 객체를 참조하는 필드가 추가로 필요함.
+    // N:1 관계 (여러 모집글은 한 명의 작성자에 의해 작성됨)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user; // 게시글 작성자
 
     // 기존 생성자에 파라미터로 User 객체를 추가합니다.
     public ProjectPost(String title, String content, int capacity, String category, String location, User user) {
@@ -87,7 +67,38 @@ private User user; // 게시글 작성자
         this.category = category;
         this.location = location;
         this.currentApplicantCount = 0; // 초기 지원자 수
-        this.recruitmentStatus = "모집중"; // 초기 상태
+        this.recruitmentStatus = "RECRUITING"; // 초기 상태
         this.user = user; // ★ 작성자 정보 저장
+    }
+
+    public void updatePost(String title, String content, int capacity, String category, String location) {
+        this.title = title;
+        this.content = content;
+        this.capacity = capacity;
+        this.category = category;
+        this.location = location;
+}
+    // 지원자가 발생했을 때 호출할 메서드
+    public void apply() {
+        // 1. 이미 정원이 꽉 찼거나 마감되었는지 확인
+        if ("CLOSED".equals(this.recruitmentStatus) || this.currentApplicantCount >= this.capacity) {
+            throw new IllegalStateException("이미 정원이 마감된 모집글입니다.");
+        }
+
+        // 2. 지원자 수 1명 증가
+        this.currentApplicantCount++;
+
+        // 3. 증가시켰더니 정원과 같아졌다면, 상태를 "CLOSED"로 자동 변경
+        if (this.currentApplicantCount == this.capacity) {
+            this.recruitmentStatus = "CLOSED";
+        }
+    }
+
+    // 작성자 직접 마감
+    public void close() {
+        if ("CLOSED".equals(this.recruitmentStatus)) {
+            throw new IllegalStateException("이미 마감된 모집글입니다.");
+        }
+        this.recruitmentStatus = "CLOSED";
     }
 }
