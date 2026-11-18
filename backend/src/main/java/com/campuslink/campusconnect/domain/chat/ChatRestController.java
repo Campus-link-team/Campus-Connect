@@ -2,6 +2,7 @@ package com.campuslink.campusconnect.domain.chat;
 
 import com.campuslink.campusconnect.domain.chat.dto.*;
 import com.campuslink.campusconnect.global.common.ApiResponse;
+import com.campuslink.campusconnect.global.security.LoginUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +19,7 @@ public class ChatRestController {
     // 1. 채팅방 생성 또는 기존 방 반환 (POST /api/v1/chats)
     @PostMapping
     public ResponseEntity<ApiResponse<ChatRoomResponse>> createOrGetChatRoom(
-            @RequestParam(defaultValue = "1") Long userId,
+            @LoginUser Long userId,
             @RequestBody ChatRoomCreateRequest request) {
         return ResponseEntity.ok(ApiResponse.success(chatService.createOrGetChatRoom(userId, request)));
     }
@@ -26,7 +27,7 @@ public class ChatRestController {
     // 2. 내 채팅방 목록 조회 (GET /api/v1/chats)
     @GetMapping
     public ResponseEntity<ApiResponse<List<ChatRoomResponse>>> getMyChatRooms(
-            @RequestParam(defaultValue = "1") Long userId) {
+            @LoginUser Long userId) {
         return ResponseEntity.ok(ApiResponse.success(chatService.getMyChatRooms(userId)));
     }
 
@@ -34,7 +35,7 @@ public class ChatRestController {
     @GetMapping("/{chatId}")
     public ResponseEntity<ApiResponse<ChatRoomResponse>> getChatRoomDetail(
             @PathVariable Long chatId,
-            @RequestParam(defaultValue = "1") Long userId) {
+            @LoginUser Long userId) {
         return ResponseEntity.ok(ApiResponse.success(chatService.getChatRoomDetail(chatId, userId)));
     }
 
@@ -42,7 +43,7 @@ public class ChatRestController {
     @GetMapping("/{chatId}/messages")
     public ResponseEntity<ApiResponse<List<ChatMessageResponse>>> getMessages(
             @PathVariable Long chatId,
-            @RequestParam(defaultValue = "1") Long userId,
+            @LoginUser Long userId,
             @RequestParam(required = false) Long cursor,
             @RequestParam(defaultValue = "30") int size) {
         return ResponseEntity.ok(ApiResponse.success(chatService.getMessages(chatId, userId, cursor, size)));
@@ -52,7 +53,7 @@ public class ChatRestController {
     @PostMapping("/{chatId}/messages")
     public ResponseEntity<ApiResponse<ChatMessageResponse>> sendMessage(
             @PathVariable Long chatId,
-            @RequestParam(defaultValue = "1") Long userId,
+            @LoginUser Long userId,
             @RequestBody ChatMessageSendRequest request) {
         ChatMessageResponse response = chatService.sendMessage(chatId, userId, request.getMessage());
         return ResponseEntity.status(201).body(ApiResponse.success(response));
@@ -62,7 +63,7 @@ public class ChatRestController {
     @PostMapping("/{chatId}/read")
     public ResponseEntity<ApiResponse<Void>> markAsRead(
             @PathVariable Long chatId,
-            @RequestParam(defaultValue = "1") Long userId) {
+            @LoginUser Long userId) {
         chatService.markAsRead(chatId, userId);
         return ResponseEntity.ok(ApiResponse.success(null));
     }
