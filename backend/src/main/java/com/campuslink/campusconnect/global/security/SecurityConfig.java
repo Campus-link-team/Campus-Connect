@@ -43,12 +43,13 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                                .authorizeHttpRequests(auth -> auth
+                .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers("/api/auth/**").permitAll()
-                        // TODO: 프로젝트 모집 API가 userId 파라미터 대신 @LoginUser 를 쓰도록 바뀌면 인증 필요로 변경
-                        .requestMatchers("/api/projects/**").permitAll()
-                        .requestMatchers("/api/v1/projects/**").permitAll()
+                        .requestMatchers("/api/v1/auth/**").permitAll()
+                        // 모집글은 조회(GET)만 로그인 없이 허용, 작성·수정·삭제·지원은 로그인 필요
+                        .requestMatchers(HttpMethod.GET, "/api/v1/projects/**").permitAll()
+                        // WebSocket(STOMP) 핸드셰이크 엔드포인트
+                        .requestMatchers("/ws-chat/**").permitAll()
                         .requestMatchers("/error").permitAll()
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2
