@@ -25,7 +25,7 @@ public class UserService {
 
     public MyPageResponse getMyPage(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다. id=" + userId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.UNAUTHORIZED));
         int appliedCount = projectApplicationRepository.countByUser(user);
         return new MyPageResponse(user.getEmail(), user.getNickname(), user.getDepartment(), appliedCount);
     }

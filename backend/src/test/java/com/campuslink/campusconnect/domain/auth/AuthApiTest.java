@@ -38,12 +38,12 @@ class AuthApiTest {
 
     @Test
     void 회원가입_로그인_내정보조회() throws Exception {
-        mockMvc.perform(post("/api/auth/signup").contentType(MediaType.APPLICATION_JSON).content(SIGNUP_BODY))
+        mockMvc.perform(post("/api/v1/auth/signup").contentType(MediaType.APPLICATION_JSON).content(SIGNUP_BODY))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.email").value("test@syu.ac.kr"))
                 .andExpect(jsonPath("$.nickname").value("테스터"));
 
-        MvcResult login = mockMvc.perform(post("/api/auth/login").contentType(MediaType.APPLICATION_JSON)
+        MvcResult login = mockMvc.perform(post("/api/v1/auth/login").contentType(MediaType.APPLICATION_JSON)
                         .content("{\"email\":\"test@syu.ac.kr\",\"password\":\"abcd1234!\"}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.tokenType").value("Bearer"))
@@ -54,7 +54,7 @@ class AuthApiTest {
         m.find();
         String token = m.group(1);
 
-        mockMvc.perform(get("/api/users/me").header("Authorization", "Bearer " + token))
+        mockMvc.perform(get("/api/v1/users/me").header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.email").value("test@syu.ac.kr"))
                 .andExpect(jsonPath("$.createdAt").exists());
@@ -62,55 +62,55 @@ class AuthApiTest {
 
     @Test
     void 중복_이메일과_닉네임은_409() throws Exception {
-        mockMvc.perform(post("/api/auth/signup").contentType(MediaType.APPLICATION_JSON).content(SIGNUP_BODY))
+        mockMvc.perform(post("/api/v1/auth/signup").contentType(MediaType.APPLICATION_JSON).content(SIGNUP_BODY))
                 .andExpect(status().isCreated());
 
-        mockMvc.perform(post("/api/auth/signup").contentType(MediaType.APPLICATION_JSON).content(SIGNUP_BODY))
+        mockMvc.perform(post("/api/v1/auth/signup").contentType(MediaType.APPLICATION_JSON).content(SIGNUP_BODY))
                 .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.code").value("EMAIL_ALREADY_EXISTS"));
+                .andExpect(jsonPath("$.error.code").value("EMAIL_ALREADY_EXISTS"));
 
-        mockMvc.perform(post("/api/auth/signup").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/api/v1/auth/signup").contentType(MediaType.APPLICATION_JSON)
                         .content("{\"email\":\"other@syu.ac.kr\",\"password\":\"abcd1234!\",\"nickname\":\"테스터\"}"))
                 .andExpect(status().isConflict())
-                .andExpect(jsonPath("$.code").value("NICKNAME_ALREADY_EXISTS"));
+                .andExpect(jsonPath("$.error.code").value("NICKNAME_ALREADY_EXISTS"));
 
-        mockMvc.perform(get("/api/auth/nickname/check").param("nickname", "테스터"))
+        mockMvc.perform(get("/api/v1/auth/nickname/check").param("nickname", "테스터"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.available").value(false));
     }
 
     @Test
     void 비밀번호_규칙_위반은_400() throws Exception {
-        mockMvc.perform(post("/api/auth/signup").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/api/v1/auth/signup").contentType(MediaType.APPLICATION_JSON)
                         .content("{\"email\":\"a@syu.ac.kr\",\"password\":\"12345678\",\"nickname\":\"닉네임\"}"))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code").value("INVALID_INPUT"));
+                .andExpect(jsonPath("$.error.code").value("INVALID_INPUT"));
 
-        mockMvc.perform(get("/api/auth/nickname/check").param("nickname", "a"))
+        mockMvc.perform(get("/api/v1/auth/nickname/check").param("nickname", "a"))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code").value("INVALID_INPUT"));
+                .andExpect(jsonPath("$.error.code").value("INVALID_INPUT"));
     }
 
     @Test
     void 틀린_비밀번호는_LOGIN_FAILED() throws Exception {
-        mockMvc.perform(post("/api/auth/signup").contentType(MediaType.APPLICATION_JSON).content(SIGNUP_BODY))
+        mockMvc.perform(post("/api/v1/auth/signup").contentType(MediaType.APPLICATION_JSON).content(SIGNUP_BODY))
                 .andExpect(status().isCreated());
 
-        mockMvc.perform(post("/api/auth/login").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/api/v1/auth/login").contentType(MediaType.APPLICATION_JSON)
                         .content("{\"email\":\"test@syu.ac.kr\",\"password\":\"wrong1234!\"}"))
                 .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.code").value("LOGIN_FAILED"));
+                .andExpect(jsonPath("$.error.code").value("LOGIN_FAILED"));
     }
 
     @Test
     void 토큰없이_내정보조회는_401() throws Exception {
-        mockMvc.perform(get("/api/users/me"))
+        mockMvc.perform(get("/api/v1/users/me"))
                 .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.code").value("UNAUTHORIZED"));
+                .andExpect(jsonPath("$.error.code").value("UNAUTHORIZED"));
 
-        mockMvc.perform(get("/api/users/me").header("Authorization", "Bearer invalid.token.value"))
+        mockMvc.perform(get("/api/v1/users/me").header("Authorization", "Bearer invalid.token.value"))
                 .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.code").value("UNAUTHORIZED"));
+                .andExpect(jsonPath("$.error.code").value("UNAUTHORIZED"));
     }
 
     @Test
@@ -122,8 +122,8 @@ class AuthApiTest {
         String expired = jwtEncoder.encode(
                 JwtEncoderParameters.from(JwsHeader.with(MacAlgorithm.HS256).build(), claims)).getTokenValue();
 
-        mockMvc.perform(get("/api/users/me").header("Authorization", "Bearer " + expired))
+        mockMvc.perform(get("/api/v1/users/me").header("Authorization", "Bearer " + expired))
                 .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.code").value("TOKEN_EXPIRED"));
+                .andExpect(jsonPath("$.error.code").value("TOKEN_EXPIRED"));
     }
 }

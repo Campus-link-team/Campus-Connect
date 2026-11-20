@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-// 토큰이 없거나 잘못됐을 때 401 + {"code":"UNAUTHORIZED"|"TOKEN_EXPIRED"} JSON 응답
+// 토큰이 없거나 잘못됐을 때 401 + {"data":null,"error":{"code":"UNAUTHORIZED"|"TOKEN_EXPIRED","message":"..."}}
 @Component
 public class JsonAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
@@ -27,6 +27,7 @@ public class JsonAuthenticationEntryPoint implements AuthenticationEntryPoint {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
         response.getWriter().write(
-                "{\"code\":\"" + code.name() + "\",\"message\":\"" + code.getMessage() + "\"}");
+                "{\"data\":null,\"error\":{\"code\":\"" + code.name()
+                        + "\",\"message\":\"" + code.getMessage() + "\"}}");
     }
 }
