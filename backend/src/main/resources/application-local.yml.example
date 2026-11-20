@@ -1,0 +1,7 @@
+# application-local.yml로 복사한 뒤 자신의 MySQL 접속 정보를 입력합니다.
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/campus_connect
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: your_mysql_username
+    password: "your_mysql_password"

@@ -1,0 +1,47 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.iml
+
+# Logs
+*.log
+logs/
+
+# Frontend
+**/node_modules/
+**/dist/
+**/coverage/
+**/.vite/
+**/.cache/
+
+# Backend / Gradle
+**/.gradle/
+**/build/
+**/out/
+*.class
+
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+**/application-local.yml
+**/application-local.yaml
+**/application-local.properties
+**/application-secret.yml
+**/application-secret.yaml
+**/application-secret.properties
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+**/credentials.json
+**/secrets.yml
+**/secrets.yaml
+**/passwords.txt

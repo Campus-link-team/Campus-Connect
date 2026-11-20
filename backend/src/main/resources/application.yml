@@ -1,0 +1,18 @@
+# 가독성과 구조적 유연성, spring boot와의 연결을 위한 YAML 사용
+# 공통 설정. DB 접속 정보는 application-local.yml에 작성
+spring:
+  profiles:
+    active: local
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+# JWT 설정 (3.1 인증)
+# 로컬 개발용 기본값입니다. 배포 환경에서는 JWT_SECRET 환경변수로 32자 이상 임의 문자열을 넣어 주세요.
+jwt:
+  secret: ${JWT_SECRET:campus-connect-local-dev-secret-key-change-me}
+  expiration-seconds: 3600
