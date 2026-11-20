@@ -1,0 +1,244 @@
+
+/* ========================================
+   CampusLink - Common Header
+   ======================================== */
+
+.site-header {
+  width: 100%;
+  height: 76px;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.site-header__inner {
+  width: 100%;
+  max-width: 1200px;
+  height: 100%;
+  margin: 0 auto;
+  padding: 0 24px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+}
+
+/* 로고 */
+
+.site-header__logo {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  color: var(--color-text);
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  white-space: nowrap;
+}
+
+.site-header__logo-mark {
+  width: 34px;
+  height: 34px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 9px;
+  background: var(--color-primary);
+  color: #FFFFFF;
+  font-size: 21px;
+}
+
+.site-header__logo-green {
+  color: var(--color-primary);
+}
+
+/* 중앙 메뉴 */
+
+.site-header__nav {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 36px;
+}
+
+.site-header__nav-link {
+  height: 100%;
+  display: flex;
+  align-items: center;
+
+  color: var(--color-text-muted);
+  font-size: 15px;
+  font-weight: 600;
+
+  border-bottom: 3px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.site-header__nav-link:hover,
+.site-header__nav-link.is-active {
+  color: var(--color-primary);
+}
+
+.site-header__nav-link.is-active {
+  border-bottom-color: var(--color-primary);
+}
+
+/* 오른쪽 사용자 메뉴 */
+
+.site-header__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 20px;
+
+  white-space: nowrap;
+}
+
+.site-header__login,
+.site-header__mypage {
+  color: var(--color-text-muted);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.site-header__login:hover,
+.site-header__mypage:hover {
+  color: var(--color-primary);
+}
+
+/* 회원가입 버튼 */
+
+.site-header__signup {
+  padding: 10px 17px;
+  border-radius: var(--radius-sm);
+
+  background: var(--color-primary);
+  color: #FFFFFF;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  transition: background 0.2s;
+}
+
+.site-header__signup:hover {
+  background: var(--color-primary-hover);
+}
+
+/* 로그인된 사용자 */
+
+.site-header__user-name {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  color: var(--color-text);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.site-header__user-name svg {
+  color: var(--color-primary);
+}
+
+.site-header__logout {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  padding: 8px 0;
+  border: none;
+  background: transparent;
+
+  color: var(--color-text-muted);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.site-header__logout:hover {
+  color: var(--color-danger);
+}
+
+/* 태블릿 */
+
+@media (max-width: 768px) {
+  .site-header {
+    height: auto;
+    min-height: 70px;
+  }
+
+  .site-header__inner {
+    min-height: 70px;
+    padding: 12px 18px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .site-header__logo {
+    font-size: 21px;
+  }
+
+  .site-header__nav {
+    order: 3;
+    width: 100%;
+    height: 42px;
+    justify-content: center;
+    gap: 35px;
+  }
+
+  .site-header__actions {
+    gap: 13px;
+  }
+}
+
+/* 모바일 */
+
+@media (max-width: 480px) {
+  .site-header__inner {
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .site-header__logo {
+    font-size: 19px;
+  }
+
+  .site-header__logo-mark {
+    width: 30px;
+    height: 30px;
+    font-size: 18px;
+  }
+
+  .site-header__actions {
+    gap: 10px;
+  }
+
+  .site-header__login,
+  .site-header__mypage,
+  .site-header__user-name {
+    font-size: 12px;
+  }
+
+  .site-header__signup {
+    padding: 8px 11px;
+    font-size: 12px;
+  }
+
+  .site-header__logout {
+    font-size: 12px;
+  }
+
+  .site-header__nav {
+    gap: 28px;
+  }
+
+  .site-header__nav-link {
+    font-size: 13px;
+  }
+}

@@ -1,0 +1,323 @@
+
+/* ========================================
+   CampusLink - Book Create
+   ======================================== */
+
+.book-create-page {
+  width: 100%;
+  max-width: 900px;
+  min-height: 650px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+
+/* 뒤로가기 */
+
+.book-create-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 30px;
+  color: var(--color-text-muted);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.book-create-back:hover {
+  color: var(--color-primary);
+}
+
+/* 제목 */
+
+.book-create-heading {
+  margin-bottom: 28px;
+}
+
+.book-create-heading > span {
+  color: var(--color-primary);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+}
+
+.book-create-heading h1 {
+  margin: 10px 0;
+  color: var(--color-text);
+  font-size: 30px;
+  font-weight: 800;
+}
+
+.book-create-heading p {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 14px;
+}
+
+/* 전체 폼 */
+
+.book-create-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 30px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: white;
+  box-shadow: var(--shadow-sm);
+}
+
+/* 폼 영역 */
+
+.book-form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.book-form-section h2 {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 17px;
+  font-weight: 750;
+}
+
+.book-form-section h2 span,
+.book-form-field label span {
+  color: var(--color-primary);
+}
+
+/* 이미지 업로드 */
+
+.book-form-upload {
+  width: 100%;
+  min-height: 230px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-background);
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.book-form-upload:hover {
+  border-color: var(--color-primary);
+}
+
+.book-form-upload input {
+  display: none;
+}
+
+.book-form-upload-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  color: var(--color-primary);
+}
+
+.book-form-upload-placeholder strong {
+  color: var(--color-text);
+  font-size: 14px;
+}
+
+.book-form-upload-placeholder span {
+  color: var(--color-text-muted);
+  font-size: 12px;
+}
+
+.book-form-preview {
+  width: 100%;
+  max-height: 400px;
+  object-fit: contain;
+}
+
+/* 기본 입력 필드 */
+
+.book-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.book-form-field label {
+  color: var(--color-text);
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.book-form-field input {
+  width: 100%;
+  height: 48px;
+  padding: 0 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  outline: none;
+  background: white;
+  color: var(--color-text);
+  font-size: 14px;
+}
+
+.book-form-field input:focus,
+.book-form-description:focus {
+  border-color: var(--color-primary);
+}
+
+.book-form-field input::placeholder,
+.book-form-description::placeholder {
+  color: var(--color-text-light);
+}
+
+/* 가격 입력 */
+
+.book-form-price {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.book-form-price input {
+  flex: 1;
+  min-width: 0;
+}
+
+.book-form-price > span {
+  color: var(--color-text-muted);
+  font-size: 14px;
+  font-weight: 650;
+}
+
+/* 상품 상태 선택 */
+
+.book-condition-options {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.book-condition-option {
+  min-height: 44px;
+  padding: 9px 6px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: white;
+  color: var(--color-text-muted);
+  font-size: 12px;
+  font-weight: 650;
+  transition: all 0.2s;
+}
+
+.book-condition-option:hover {
+  border-color: var(--color-primary);
+}
+
+.book-condition-option.is-selected {
+  border-color: var(--color-primary);
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+}
+
+.book-form-hint {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+/* 상품 설명 */
+
+.book-form-description {
+  width: 100%;
+  min-height: 150px;
+  padding: 14px;
+  resize: vertical;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  outline: none;
+  background: white;
+  color: var(--color-text);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.book-form-character-count {
+  color: var(--color-text-light);
+  font-size: 11px;
+  text-align: right;
+}
+
+/* 오류 메시지 */
+
+.book-form-error {
+  padding: 13px 15px;
+  border-radius: var(--radius-sm);
+  background: #FFF0F0;
+  color: var(--color-danger);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* 등록 버튼 */
+
+.book-form-submit {
+  width: 100%;
+  min-height: 50px;
+  border: none;
+  border-radius: var(--radius-md);
+  background: var(--color-primary);
+  color: white;
+  font-size: 15px;
+  font-weight: 750;
+  transition: background 0.2s;
+}
+
+.book-form-submit:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+}
+
+.book-form-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.book-form-notice {
+  margin: -12px 0 0;
+  color: var(--color-text-muted);
+  font-size: 11px;
+  text-align: center;
+}
+
+/* 모바일 */
+
+@media (max-width: 600px) {
+  .book-create-page {
+    padding: 25px 14px 50px;
+  }
+
+  .book-create-heading h1 {
+    font-size: 25px;
+  }
+
+  .book-create-form {
+    padding: 20px 15px;
+    gap: 22px;
+  }
+
+  .book-condition-options {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .book-form-upload {
+    min-height: 190px;
+  }
+}
+
+/* 선택 항목 표시 */
+.optional-label {
+  margin-left: 5px;
+  color: var(--color-text-muted);
+  font-size: 12px;
+  font-weight: 500;
+}

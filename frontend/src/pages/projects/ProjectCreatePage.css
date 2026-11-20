@@ -1,0 +1,438 @@
+
+/* ========================================
+   CampusLink - Project Create
+   ======================================== */
+
+.project-create-page {
+  width: 100%;
+  max-width: 900px;
+  min-height: 650px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+
+/* 뒤로가기 */
+
+.project-create-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 30px;
+  color: var(--color-text-muted);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.project-create-back:hover {
+  color: var(--color-primary);
+}
+
+/* 제목 */
+
+.project-create-heading {
+  margin-bottom: 28px;
+}
+
+.project-create-heading > span {
+  color: var(--color-primary);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+}
+
+.project-create-heading h1 {
+  margin: 10px 0;
+  color: var(--color-text);
+  font-size: 30px;
+  font-weight: 800;
+}
+
+.project-create-heading p {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 14px;
+}
+
+/* 전체 폼 */
+
+.project-create-form {
+  display: flex;
+  flex-direction: column;
+  gap: 27px;
+  padding: 30px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: white;
+  box-shadow: var(--shadow-sm);
+}
+
+/* 각 입력 섹션 */
+
+.project-form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.project-form-section > h2 {
+  margin: 0;
+  padding-bottom: 13px;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text);
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.project-form-section > h2 span,
+.project-form-field label span {
+  color: var(--color-primary);
+}
+
+.project-form-description {
+  margin: -5px 0 0;
+  color: var(--color-text-muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+/* 공통 입력 필드 */
+
+.project-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.project-form-field > label {
+  color: var(--color-text);
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.project-form-field > input,
+.project-form-field > select,
+.project-form-field > textarea {
+  width: 100%;
+  min-height: 47px;
+  padding: 12px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  outline: none;
+  background: white;
+  color: var(--color-text);
+  font-size: 14px;
+}
+
+.project-form-field > textarea {
+  min-height: 130px;
+  resize: vertical;
+  line-height: 1.7;
+}
+
+.project-form-field > input:focus,
+.project-form-field > select:focus,
+.project-form-field > textarea:focus {
+  border-color: var(--color-primary);
+}
+
+.project-form-field input::placeholder,
+.project-form-field textarea::placeholder {
+  color: var(--color-text-light);
+}
+
+.project-form-count {
+  color: var(--color-text-light);
+  font-size: 11px;
+  text-align: right;
+}
+
+/* 모집 역할 편집 */
+
+.project-role-editor {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 115px;
+  gap: 14px;
+  padding: 19px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-background);
+}
+
+.project-role-editor > .project-form-field:nth-child(3) {
+  grid-column: 1 / -1;
+}
+
+.project-role-editor .project-form-field > label {
+  font-size: 12px;
+}
+
+.project-role-editor .project-form-field > input,
+.project-role-editor .project-form-field > select {
+  min-height: 43px;
+  background: white;
+}
+
+/* 역할 추가 버튼 */
+
+.project-role-add-button {
+  min-height: 43px;
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 1px dashed var(--color-primary);
+  border-radius: var(--radius-sm);
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+  font-size: 13px;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.project-role-add-button:hover {
+  background: #DCEFE1;
+}
+
+/* 추가된 역할 목록 */
+
+.project-role-added {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.project-role-added h3 {
+  margin: 0 0 3px;
+  color: var(--color-text);
+  font-size: 14px;
+}
+
+.project-role-added-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 15px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: white;
+}
+
+.project-role-added-item > div {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+
+.project-role-added-item strong {
+  color: var(--color-text);
+  font-size: 13px;
+}
+
+.project-role-added-item span {
+  padding: 4px 8px;
+  border-radius: 20px;
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.project-role-added-item p {
+  width: 100%;
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 12px;
+}
+
+.project-role-added-item button {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: #FFF0F0;
+  color: var(--color-danger);
+  cursor: pointer;
+}
+
+.project-role-empty {
+  margin: 0;
+  padding: 23px;
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-muted);
+  font-size: 12px;
+  text-align: center;
+}
+
+/* 진행 방식 */
+
+.project-method-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.project-method-option {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 8px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: white;
+  color: var(--color-text-muted);
+  font-size: 12px;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.project-method-option.is-selected {
+  border-color: var(--color-primary);
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+}
+
+.project-method-option input {
+  accent-color: var(--color-primary);
+}
+
+/* 부가 안내 */
+
+.project-form-help {
+  color: var(--color-text-muted);
+  font-size: 11px;
+}
+
+.project-form-error {
+  padding: 13px 15px;
+  border-radius: var(--radius-sm);
+  background: #FFF0F0;
+  color: var(--color-danger);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* 등록 버튼 */
+
+.project-form-submit {
+  width: 100%;
+  min-height: 51px;
+  border: none;
+  border-radius: var(--radius-md);
+  background: var(--color-primary);
+  color: white;
+  font-size: 15px;
+  font-weight: 750;
+  transition: background 0.2s;
+}
+
+.project-form-submit:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+}
+
+.project-form-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.project-form-notice {
+  margin: -15px 0 0;
+  color: var(--color-text-muted);
+  font-size: 11px;
+  text-align: center;
+}
+
+/* 태블릿 */
+
+@media (max-width: 768px) {
+  .project-create-page {
+    padding: 35px 18px 60px;
+  }
+
+  .project-create-form {
+    padding: 23px;
+  }
+}
+
+/* 모바일 */
+
+@media (max-width: 480px) {
+  .project-create-page {
+    padding: 25px 14px 50px;
+  }
+
+  .project-create-heading h1 {
+    font-size: 25px;
+  }
+
+  .project-create-form {
+    padding: 20px 15px;
+    gap: 23px;
+  }
+
+  .project-role-editor {
+    grid-template-columns: minmax(0, 1fr) 90px;
+    padding: 13px;
+  }
+
+  .project-method-options {
+    grid-template-columns: 1fr;
+  }
+
+  .project-role-added-item {
+    padding: 12px;
+  }
+}
+
+
+/* ========================================
+   프로젝트 수정 화면
+   ======================================== */
+
+.project-edit-role {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  padding: 17px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: white;
+}
+
+.project-edit-role-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.project-edit-role-heading strong {
+  color: var(--color-primary);
+  font-size: 14px;
+}
+
+.project-edit-role-heading button {
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: #FFF0F0;
+  color: var(--color-danger);
+}
+
+.project-edit-role-heading button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

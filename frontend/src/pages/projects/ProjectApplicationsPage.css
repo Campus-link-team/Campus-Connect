@@ -1,0 +1,540 @@
+
+/* ========================================
+   CampusLink - Project Applications
+   ======================================== */
+
+.project-applications-page {
+  width: 100%;
+  max-width: 1000px;
+  min-height: 650px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+
+/* 뒤로가기 */
+
+.project-applications-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 28px;
+  color: var(--color-text-muted);
+  font-size: 14px;
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.project-applications-back:hover {
+  color: var(--color-primary);
+}
+
+/* 페이지 제목 */
+
+.project-applications-header {
+  margin-bottom: 26px;
+}
+
+.project-applications-header > span {
+  color: var(--color-primary);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.project-applications-header h1 {
+  margin: 10px 0;
+  color: var(--color-text);
+  font-size: 30px;
+  font-weight: 800;
+}
+
+.project-applications-header p {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* 프로젝트 요약 */
+
+.project-applications-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 23px;
+  margin-bottom: 20px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-background);
+}
+
+.project-applications-summary > div {
+  min-width: 0;
+}
+
+.project-applications-category {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 30px;
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.project-applications-summary h2 {
+  margin: 12px 0 7px;
+  color: var(--color-text);
+  font-size: 19px;
+}
+
+.project-applications-summary p {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.project-applications-summary > a {
+  flex-shrink: 0;
+  padding: 10px 15px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: white;
+  color: var(--color-text);
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.project-applications-summary > a:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+/* 지원 현황 통계 */
+
+.project-applications-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.project-applications-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 18px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: white;
+}
+
+.project-applications-stat svg {
+  color: var(--color-text-muted);
+}
+
+.project-applications-stat span {
+  color: var(--color-text-muted);
+  font-size: 12px;
+}
+
+.project-applications-stat strong {
+  color: var(--color-text);
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.project-applications-stat.is-pending svg {
+  color: var(--color-warning);
+}
+
+.project-applications-stat.is-approved svg {
+  color: var(--color-success);
+}
+
+.project-applications-stat.is-rejected svg {
+  color: var(--color-danger);
+}
+
+/* 현재 모집 인원 */
+
+.project-applications-member-status {
+  padding: 22px;
+  margin-bottom: 30px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: white;
+}
+
+.project-applications-member-status > div:first-child {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.project-applications-member-status > div:first-child span {
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+
+.project-applications-member-status > div:first-child strong {
+  color: var(--color-primary);
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.project-applications-role-status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding-top: 15px;
+}
+
+.project-applications-role-status > div {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--color-background);
+}
+
+.project-applications-role-status span {
+  color: var(--color-text-muted);
+  font-size: 12px;
+}
+
+.project-applications-role-status strong {
+  color: var(--color-text);
+  font-size: 12px;
+}
+
+/* 지원자 목록 제목 */
+
+.project-applications-list-section {
+  margin-bottom: 25px;
+}
+
+.project-applications-list-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.project-applications-list-heading h2 {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.project-applications-list-heading span {
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+
+/* 지원자 목록 */
+
+.project-applications-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.project-application-card {
+  padding: 22px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: white;
+  box-shadow: var(--shadow-sm);
+}
+
+/* 지원자 프로필 */
+
+.project-application-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.project-application-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.project-application-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 43px;
+  height: 43px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+}
+
+.project-application-profile > div:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.project-application-profile strong {
+  color: var(--color-text);
+  font-size: 14px;
+}
+
+.project-application-profile span {
+  color: var(--color-text-muted);
+  font-size: 12px;
+}
+
+/* 신청 상태 */
+
+.project-application-status {
+  flex-shrink: 0;
+  padding: 6px 11px;
+  border-radius: 30px;
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.project-application-status.is-pending {
+  background: #FFF5E8;
+  color: #B87925;
+}
+
+.project-application-status.is-approved {
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+}
+
+.project-application-status.is-rejected {
+  background: #FFF0F0;
+  color: var(--color-danger);
+}
+
+/* 지원 역할 */
+
+.project-application-role {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 17px 0;
+  color: var(--color-text-muted);
+  font-size: 12px;
+}
+
+.project-application-role strong {
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--color-blue-soft);
+  color: var(--color-blue);
+  font-size: 12px;
+}
+
+/* 자기소개 */
+
+.project-application-introduction {
+  padding: 16px;
+  border-radius: var(--radius-md);
+  background: var(--color-background);
+}
+
+.project-application-introduction h3 {
+  margin: 0 0 10px;
+  color: var(--color-text);
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.project-application-introduction p {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 13px;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* 카드 하단 */
+
+.project-application-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 17px;
+}
+
+.project-application-footer > span {
+  color: var(--color-text-light);
+  font-size: 11px;
+}
+
+/* 승인 및 거절 버튼 */
+
+.project-application-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.project-application-actions button {
+  min-width: 72px;
+  padding: 9px 13px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.project-application-reject {
+  background: #FFF0F0;
+  color: var(--color-danger);
+}
+
+.project-application-reject:hover {
+  background: #FFE1E1;
+}
+
+.project-application-approve {
+  background: var(--color-primary);
+  color: white;
+}
+
+.project-application-approve:hover {
+  background: var(--color-primary-hover);
+}
+
+.project-application-actions button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* 오류 및 빈 화면 */
+
+.project-applications-error {
+  padding: 13px 15px;
+  margin-bottom: 18px;
+  border-radius: var(--radius-sm);
+  background: #FFF0F0;
+  color: var(--color-danger);
+  font-size: 13px;
+}
+
+.project-applications-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 50px 20px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: white;
+  text-align: center;
+}
+
+.project-applications-empty svg {
+  color: var(--color-text-light);
+}
+
+.project-applications-empty h3,
+.project-applications-empty h1 {
+  margin: 15px 0 8px;
+  color: var(--color-text);
+  font-size: 18px;
+}
+
+.project-applications-empty p {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.project-applications-empty a {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 10px 15px;
+  border-radius: var(--radius-sm);
+  background: var(--color-primary);
+  color: white;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+/* 안내 문구 */
+
+.project-applications-notice {
+  margin: 20px 0 0;
+  color: var(--color-text-light);
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+/* 모바일 */
+
+@media (max-width: 650px) {
+  .project-applications-page {
+    padding: 25px 14px 50px;
+  }
+
+  .project-applications-header h1 {
+    font-size: 25px;
+  }
+
+  .project-applications-summary {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 18px;
+  }
+
+  .project-applications-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .project-applications-stat {
+    padding: 14px;
+  }
+
+  .project-applications-stat strong {
+    font-size: 19px;
+  }
+
+  .project-applications-member-status {
+    padding: 17px;
+  }
+
+  .project-application-card {
+    padding: 17px;
+  }
+
+  .project-application-footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .project-application-actions {
+    width: 100%;
+  }
+
+  .project-application-actions button {
+    flex: 1;
+  }
+}

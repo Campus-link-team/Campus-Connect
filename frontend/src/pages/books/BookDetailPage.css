@@ -1,0 +1,544 @@
+
+/* ========================================
+   CampusLink - Book Detail
+   ======================================== */
+
+.book-detail-page {
+  width: 100%;
+  max-width: 1200px;
+  min-height: 650px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+
+/* 목록 돌아가기 */
+
+.book-detail-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 25px;
+  color: var(--color-text-muted);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.book-detail-back:hover {
+  color: var(--color-primary);
+}
+
+/* 상세 정보 레이아웃 */
+
+.book-detail-container {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 55px;
+  padding: 30px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: white;
+  box-shadow: var(--shadow-sm);
+}
+
+/* 상품 이미지 */
+
+.book-detail-image-section {
+  min-width: 0;
+}
+
+.book-detail-image {
+  width: 100%;
+  min-height: 430px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 25px;
+  border-radius: var(--radius-lg);
+}
+
+.book-detail-image--green {
+  background: #EAF5ED;
+  color: #16834A;
+}
+
+.book-detail-image--blue {
+  background: #EAF3FF;
+  color: #397FCB;
+}
+
+.book-detail-image--orange {
+  background: #FFF2E5;
+  color: #C47A32;
+}
+
+.book-detail-image span {
+  max-width: 85%;
+  text-align: center;
+  font-size: 25px;
+  font-weight: 800;
+}
+
+.book-detail-image-caption {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 12px;
+  color: var(--color-text-light);
+  font-size: 11px;
+}
+
+/* 상품 정보 */
+
+.book-detail-info {
+  min-width: 0;
+}
+
+.book-detail-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 17px;
+}
+
+.book-detail-status__badge {
+  padding: 6px 11px;
+  border-radius: 30px;
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.book-detail-favorite {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: white;
+  color: var(--color-text-muted);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.book-detail-favorite:hover,
+.book-detail-favorite.is-favorite {
+  border-color: #E9A4A4;
+  color: #D94B4B;
+}
+
+.book-detail-info h1 {
+  margin: 0 0 9px;
+  color: var(--color-text);
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+
+.book-detail-department {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 14px;
+}
+
+.book-detail-price {
+  margin-top: 25px;
+  color: var(--color-primary);
+  font-size: 31px;
+  font-weight: 800;
+}
+
+/* 상품 상태 */
+
+.book-detail-condition {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 25px;
+  padding: 15px;
+  border-radius: var(--radius-md);
+  background: var(--color-background);
+}
+
+.book-detail-condition span {
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+
+.book-detail-condition strong {
+  color: var(--color-primary);
+  font-size: 14px;
+}
+
+.book-detail-condition-description {
+  margin: 10px 0 0;
+  color: var(--color-text-muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+/* 구분선 */
+
+.book-detail-divider {
+  height: 1px;
+  margin: 23px 0;
+  background: var(--color-border);
+}
+
+/* 상품 상세 항목 */
+
+.book-detail-spec {
+  display: flex;
+  flex-direction: column;
+  gap: 17px;
+}
+
+.book-detail-spec > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+}
+
+.book-detail-spec span {
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+
+.book-detail-spec strong {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--color-text);
+  font-size: 13px;
+  font-weight: 650;
+  text-align: right;
+}
+
+/* 판매자 */
+
+.book-seller h2 {
+  margin: 0 0 16px;
+  font-size: 17px;
+}
+
+.book-seller-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.book-seller-avatar {
+  width: 43px;
+  height: 43px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+}
+
+.book-seller-profile > div:nth-child(2) {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.book-seller-profile strong {
+  color: var(--color-text);
+  font-size: 14px;
+}
+
+.book-seller-profile span {
+  color: var(--color-text-muted);
+  font-size: 12px;
+}
+
+.book-seller-verified {
+  margin-left: auto;
+  color: var(--color-primary);
+}
+
+/* 문의 버튼 */
+
+.book-detail-contact {
+  width: 100%;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  margin-top: 26px;
+  border: none;
+  border-radius: var(--radius-md);
+  background: #B6C7BB;
+  color: white;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: not-allowed;
+}
+
+/* 안내 */
+
+.book-detail-notice {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin: 13px 0 0;
+  color: var(--color-text-muted);
+  font-size: 11px;
+}
+
+/* 상품 설명 */
+
+.book-description-section {
+  margin-top: 25px;
+  padding: 30px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: white;
+}
+
+.book-description-section h2 {
+  margin-bottom: 16px;
+  color: var(--color-text);
+  font-size: 19px;
+}
+
+.book-description-section p {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 14px;
+  line-height: 1.9;
+  white-space: pre-wrap;
+}
+
+/* 존재하지 않는 상품 */
+
+.book-detail-empty {
+  min-height: 450px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 13px;
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.book-detail-empty h2 {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 21px;
+}
+
+.book-detail-empty p {
+  font-size: 13px;
+}
+
+.book-detail-empty .book-detail-back {
+  padding: 12px 18px;
+  border-radius: var(--radius-md);
+  background: var(--color-primary);
+  color: white;
+}
+
+/* 태블릿 및 모바일 */
+
+@media (max-width: 768px) {
+  .book-detail-container {
+    grid-template-columns: 1fr;
+    gap: 30px;
+    padding: 20px;
+  }
+
+  .book-detail-image {
+    min-height: 320px;
+  }
+}
+
+@media (max-width: 480px) {
+  .book-detail-page {
+    padding: 25px 14px 50px;
+  }
+
+  .book-detail-container {
+    padding: 15px;
+    gap: 25px;
+  }
+
+  .book-detail-image {
+    min-height: 260px;
+  }
+
+  .book-detail-image span {
+    font-size: 21px;
+  }
+
+  .book-detail-info h1 {
+    font-size: 25px;
+  }
+
+  .book-detail-price {
+    font-size: 27px;
+  }
+
+  .book-description-section {
+    padding: 20px;
+  }
+}
+
+.book-detail-photo {
+  width: 100%;
+  height: 430px;
+  object-fit: cover;
+  border-radius: var(--radius-lg);
+}
+
+@media (max-width: 768px) {
+  .book-detail-photo {
+    height: 320px;
+  }
+}
+
+@media (max-width: 480px) {
+  .book-detail-photo {
+    height: 260px;
+  }
+}
+
+
+/* ========================================
+   상품 관리 영역
+   ======================================== */
+
+.book-detail-management {
+  margin-top: 25px;
+  padding: 28px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: white;
+  box-shadow: var(--shadow-sm);
+}
+
+.book-detail-management-heading h2 {
+  margin: 0 0 7px;
+  color: var(--color-text);
+  font-size: 19px;
+}
+
+.book-detail-management-heading p {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 12px;
+}
+
+.book-detail-management-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-top: 23px;
+  padding: 16px 0;
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.book-detail-management-status label {
+  color: var(--color-text);
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.book-detail-management-status select {
+  min-width: 150px;
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: white;
+  color: var(--color-text);
+  font-size: 13px;
+}
+
+.book-detail-management-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.book-edit-button,
+.book-delete-button {
+  min-height: 43px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 0 17px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.book-edit-button {
+  flex: 1;
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+}
+
+.book-edit-button:hover {
+  background: #DCEFE1;
+}
+
+.book-delete-button {
+  border: 1px solid #F1DADA;
+  background: #FFF5F5;
+  color: var(--color-danger);
+}
+
+.book-delete-button:hover {
+  background: #FFEAEA;
+}
+
+.book-management-error {
+  margin: 12px 0 0;
+  color: var(--color-danger);
+  font-size: 13px;
+}
+
+.book-management-notice {
+  margin: 15px 0 0;
+  color: var(--color-text-light);
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+/* 모바일 */
+
+@media (max-width: 480px) {
+  .book-detail-management {
+    padding: 20px 15px;
+  }
+
+  .book-detail-management-actions {
+    flex-direction: column;
+  }
+
+  .book-detail-management-status {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .book-detail-management-status select {
+    width: 100%;
+  }
+
+  .book-edit-button,
+  .book-delete-button {
+    width: 100%;
+  }
+}
