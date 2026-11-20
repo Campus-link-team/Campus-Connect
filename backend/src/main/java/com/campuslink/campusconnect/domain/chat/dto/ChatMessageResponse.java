@@ -19,7 +19,7 @@ public class ChatMessageResponse {
         this.messageId = entity.getId();
         this.chatId = entity.getChatRoom().getId();
         this.senderId = entity.getSender().getId();
-        this.senderName = entity.getSender().getName();
+        this.senderName = entity.getSender().getNickname();
         this.message = entity.getMessage();
         this.isRead = entity.isRead();
         this.sendTime = entity.getSendTime();

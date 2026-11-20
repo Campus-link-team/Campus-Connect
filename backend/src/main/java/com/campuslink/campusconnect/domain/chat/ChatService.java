@@ -99,7 +99,7 @@ public class ChatService {
         room.updateLastActivity();
 
         // 기존 WebSocket 구독자(/sub/chat/room/{chatId})에게도 실시간 전파
-        ChatMessageDto wsPayload = new ChatMessageDto(sender.getId(), sender.getName(), saved.getMessage());
+        ChatMessageDto wsPayload = new ChatMessageDto(sender.getId(), sender.getNickname(), saved.getMessage());
         messagingTemplate.convertAndSend("/sub/chat/room/" + chatId, wsPayload);
 
         return new ChatMessageResponse(saved);
@@ -131,7 +131,7 @@ public class ChatService {
                 room.getContextType(),
                 room.getContextId(),
                 opponent.getId(),
-                opponent.getName(),
+                opponent.getNickname(),
                 lastMsg != null ? lastMsg.getMessage() : null,
                 lastMsg != null ? lastMsg.getSendTime() : room.getCreatedAt(),
                 unreadCount
