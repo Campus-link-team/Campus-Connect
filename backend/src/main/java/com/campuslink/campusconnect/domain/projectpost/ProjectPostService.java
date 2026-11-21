@@ -179,6 +179,7 @@ public class ProjectPostService {
     }
 
     // 3. 지원자 승인/거절 처리 (작성자만 가능, 이미 처리된 지원 재처리 불가)
+    @Transactional
     public void updateApplicationStatus(Long projectId, Long applicationId, Long userId, ApplicationStatusRequest request) {
         ProjectApplication application = projectApplicationRepository.findById(applicationId)
                 .orElseThrow(() -> new IllegalArgumentException("지원 내역을 찾을 수 없습니다. id=" + applicationId));
