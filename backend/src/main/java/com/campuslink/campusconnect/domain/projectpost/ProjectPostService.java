@@ -5,6 +5,8 @@ import com.campuslink.campusconnect.domain.projectapplication.ProjectApplication
 import com.campuslink.campusconnect.domain.projectpost.dto.*;
 import com.campuslink.campusconnect.domain.user.User;
 import com.campuslink.campusconnect.domain.user.UserRepository;
+import com.campuslink.campusconnect.global.exception.BusinessException;
+import com.campuslink.campusconnect.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -86,19 +88,14 @@ public class ProjectPostService {
         ProjectPost projectPost = projectPostRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글을 찾을 수 없습니다. id=" + id));
 // 4개의 데이터를 상자(DTO) 규격에 맞춰서 담아 반환합니다.
-        return new ProjectPostResponse(
-                projectPost.getId(),
-                projectPost.getTitle(),
-                projectPost.getUser(),
-                projectPost.getStartDate() != null ? projectPost.getStartDate().toString() : "미정",
-                projectPost.getRecruitmentStatus()
-        );
+        return ProjectPostResponse.from(projectPost);
     }
 
     @Transactional
-    public Long updateProjectPost(Long id, ProjectPostUpdateRequest request) {
+    public Long updateProjectPost(Long id, Long userId, ProjectPostUpdateRequest request) {
         ProjectPost projectPost = projectPostRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("게시글이 없습니다. id=" + id));
+        validateWriter(projectPost, userId, "모집글 작성자만 수정할 수 있습니다.");
 
         projectPost.updatePost(
                 request.getTitle(),
@@ -112,9 +109,10 @@ public class ProjectPostService {
     }
 
     @Transactional
-    public void deleteProjectPost(Long id) {
+    public void deleteProjectPost(Long id, Long userId) {
         ProjectPost projectPost = projectPostRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("게시글이 없습니다. id=" + id));
+        validateWriter(projectPost, userId, "모집글 작성자만 삭제할 수 있습니다.");
         projectPostRepository.delete(projectPost);
     }
     // 프로젝트 목록 조회 (category, status 필터 대응)
@@ -133,12 +131,7 @@ public class ProjectPostService {
                         || (post.getCategory() != null && post.getCategory().equalsIgnoreCase(category)))
                 .filter(post -> status == null || status.isBlank()
                         || status.equalsIgnoreCase(post.getRecruitmentStatus()))
-                .map(post -> new ProjectPostResponse(
-                        post.getId(),
-                        post.getTitle(),
-                        post.getUser(),
-                        post.getStartDate() != null ? post.getStartDate().toString() : "미정",
-                        post.getRecruitmentStatus()))
+                .map(ProjectPostResponse::from)
                 .toList();
     }
 
@@ -190,9 +183,7 @@ public class ProjectPostService {
         }
 
         // 1. 모집글 작성자 본인 검증
-        if (post.getUser() == null || !post.getUser().getId().equals(userId)) {
-            throw new IllegalStateException("모집글 작성자만 지원을 승인하거나 거절할 수 있습니다.");
-        }
+        validateWriter(post, userId, "모집글 작성자만 지원을 승인하거나 거절할 수 있습니다.");
 
         // 2. 이미 처리된 지원 재처리 방지
         if (!"PENDING".equals(application.getStatus())) {
@@ -226,9 +217,7 @@ public class ProjectPostService {
         ProjectPost post = projectPostRepository.findByIdWithPessimisticLock(projectId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글을 찾을 수 없습니다. id=" + projectId));
 
-        if (post.getUser() == null || !post.getUser().getId().equals(userId)) {
-            throw new IllegalStateException("모집글 작성자만 마감할 수 있습니다.");
-        }
+        validateWriter(post, userId, "모집글 작성자만 마감할 수 있습니다.");
 
         post.close();
         rejectRemainingPendingApplications(post);
@@ -245,7 +234,7 @@ public class ProjectPostService {
         }
 
         if (application.getUser() == null || !application.getUser().getId().equals(userId)) {
-            throw new IllegalStateException("본인의 지원 내역만 취소할 수 있습니다.");
+            throw new BusinessException(ErrorCode.FORBIDDEN, "본인의 지원 내역만 취소할 수 있습니다.");
         }
 
         if (!"PENDING".equals(application.getStatus())) {
@@ -253,6 +242,25 @@ public class ProjectPostService {
         }
 
         projectApplicationRepository.delete(application);
+    }
+
+    // 지원자 목록 조회 (모집글 작성자만)
+    @Transactional(readOnly = true)
+    public List<ApplicationResponse> getApplications(Long projectId, Long userId) {
+        ProjectPost post = projectPostRepository.findById(projectId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글을 찾을 수 없습니다. id=" + projectId));
+        validateWriter(post, userId, "모집글 작성자만 지원자 목록을 볼 수 있습니다.");
+
+        return projectApplicationRepository.findAllByProjectPost(post).stream()
+                .map(ApplicationResponse::from)
+                .toList();
+    }
+
+    // 모집글 작성자 본인인지 확인 (아니면 403)
+    private void validateWriter(ProjectPost post, Long userId, String message) {
+        if (post.getUser() == null || !post.getUser().getId().equals(userId)) {
+            throw new BusinessException(ErrorCode.FORBIDDEN, message);
+        }
     }
 
     private void rejectRemainingPendingApplications(ProjectPost post) {
