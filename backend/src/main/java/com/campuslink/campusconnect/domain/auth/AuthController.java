@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final AuthService authService;
+    private final EmailVerificationService emailVerificationService;
 
     // POST /api/v1/auth/signup
     @PostMapping("/signup")
@@ -25,6 +26,18 @@ public class AuthController {
     @PostMapping("/login")
     public LoginResponse login(@Valid @RequestBody LoginRequest request) {
         return authService.login(request);
+    }
+
+    // POST /api/v1/auth/email/send-code  (Mock: 실제 메일 대신 응답의 mockCode와 서버 로그로 확인)
+    @PostMapping("/email/send-code")
+    public EmailSendResponse sendCode(@Valid @RequestBody EmailSendRequest request) {
+        return emailVerificationService.sendCode(request.email());
+    }
+
+    // POST /api/v1/auth/email/verify
+    @PostMapping("/email/verify")
+    public EmailVerifyResponse verifyEmail(@Valid @RequestBody EmailVerifyRequest request) {
+        return emailVerificationService.verify(request.email(), request.code());
     }
 
     // GET /api/v1/auth/nickname/check?nickname=홍길동

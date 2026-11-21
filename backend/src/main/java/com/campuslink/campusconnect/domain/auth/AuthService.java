@@ -19,18 +19,24 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
+    private final EmailVerificationService emailVerificationService;
 
-    // TODO(3.2): 학교 이메일 인증을 마친 이메일만 가입 가능하도록 EMAIL_NOT_VERIFIED 검사 추가
+    // 학교 이메일 인증(3.2)을 마친 이메일만 가입할 수 있다
     @Transactional
     public SignupResponse signup(SignupRequest request) {
         String email = request.email().trim().toLowerCase();
         String nickname = request.nickname().trim();
+
+        emailVerificationService.validateSchoolEmail(email);
 
         if (userRepository.existsByEmail(email)) {
             throw new BusinessException(ErrorCode.EMAIL_ALREADY_EXISTS);
         }
         if (userRepository.existsByNickname(nickname)) {
             throw new BusinessException(ErrorCode.NICKNAME_ALREADY_EXISTS);
+        }
+        if (!emailVerificationService.isVerified(email)) {
+            throw new BusinessException(ErrorCode.EMAIL_NOT_VERIFIED);
         }
 
         User user = new User(email, passwordEncoder.encode(request.password()), nickname, request.department());
