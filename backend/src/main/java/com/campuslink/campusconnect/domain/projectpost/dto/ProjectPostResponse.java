@@ -1,18 +1,42 @@
 package com.campuslink.campusconnect.domain.projectpost.dto;
 
-import com.campuslink.campusconnect.domain.user.User;
+import com.campuslink.campusconnect.domain.projectpost.ProjectPost;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.time.LocalDate;
+
+// 모집글 목록·상세 응답. 작성자는 엔티티(User) 대신 id와 닉네임만 내려준다 (비밀번호 해시 노출 방지).
 @Getter
 @AllArgsConstructor
 public class ProjectPostResponse {
-    private Long id;          // 프로젝트 고유 번호
-    private String title;     // 프로젝트 제목
-    private User user;        // 작성자 정보 (나중에 프론트엔드 요구사항에 맞춰 이름(String)만 주도록 바꿀 수도 있습니다)
-    private String startDate; // 프로젝트 시작 날짜 (문자열 형태)
-    private  String recruitmentStatus;
+    private Long id;
+    private String title;
+    private String content;
+    private int capacity;               // 모집 인원
+    private int currentApplicantCount;  // 승인된 인원
+    private String recruitmentStatus;   // RECRUITING, CLOSED
+    private String category;
+    private String location;
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private Long writerId;
+    private String writerNickname;
 
-    // 만약 예전에 다른 필드(예: content 등)를 하나만 선언해두셨다면,
-    // 그 필드를 지우고 위 4개의 필드로 통일해주시면 됩니다.
+    public static ProjectPostResponse from(ProjectPost post) {
+        return new ProjectPostResponse(
+                post.getId(),
+                post.getTitle(),
+                post.getContent(),
+                post.getCapacity(),
+                post.getCurrentApplicantCount(),
+                post.getRecruitmentStatus(),
+                post.getCategory(),
+                post.getLocation(),
+                post.getStartDate(),
+                post.getEndDate(),
+                post.getUser() != null ? post.getUser().getId() : null,
+                post.getUser() != null ? post.getUser().getNickname() : null
+        );
+    }
 }

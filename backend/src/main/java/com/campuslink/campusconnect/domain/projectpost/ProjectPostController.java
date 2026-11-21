@@ -36,15 +36,18 @@ public class ProjectPostController {
     @PatchMapping("/{projectId}")
     public ResponseEntity<ApiResponse<Long>> updateProject(
             @PathVariable Long projectId,
+            @LoginUser Long userId,
             @RequestBody ProjectPostUpdateRequest request) {
-        Long updatedId = projectPostService.updateProjectPost(projectId, request);
+        Long updatedId = projectPostService.updateProjectPost(projectId, userId, request);
         return ResponseEntity.ok(ApiResponse.success(updatedId));
     }
 
     // 4. 모집글 삭제 (기존 deleteProjectPost 활용)
     @DeleteMapping("/{projectId}")
-    public ResponseEntity<ApiResponse<Void>> deleteProject(@PathVariable Long projectId) {
-        projectPostService.deleteProjectPost(projectId);
+    public ResponseEntity<ApiResponse<Void>> deleteProject(
+            @PathVariable Long projectId,
+            @LoginUser Long userId) {
+        projectPostService.deleteProjectPost(projectId, userId);
         return ResponseEntity.ok(ApiResponse.success(null));
     }
 
@@ -73,6 +76,14 @@ public class ProjectPostController {
             @RequestBody ApplicationRequest request) {
         projectPostService.applyProject(projectId, userId, request);
         return ResponseEntity.status(201).body(ApiResponse.success(null));
+    }
+
+    // 지원자 목록 조회 (모집글 작성자만)
+    @GetMapping("/{projectId}/applications")
+    public ResponseEntity<ApiResponse<List<ApplicationResponse>>> getApplications(
+            @PathVariable Long projectId,
+            @LoginUser Long userId) {
+        return ResponseEntity.ok(ApiResponse.success(projectPostService.getApplications(projectId, userId)));
     }
 
     // 7. 지원자 승인/거절 처리 (@LoginUser 전환)
