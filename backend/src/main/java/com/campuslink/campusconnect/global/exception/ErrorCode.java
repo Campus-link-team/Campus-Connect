@@ -18,6 +18,13 @@ public enum ErrorCode {
     CONFLICT(HttpStatus.CONFLICT, "요청을 처리할 수 없는 상태입니다."),
     FORBIDDEN(HttpStatus.FORBIDDEN, "접근 권한이 없습니다."),
 
+    // 학교 이메일 인증 (3.2, Mock)
+    INVALID_SCHOOL_EMAIL(HttpStatus.BAD_REQUEST, "학교 이메일만 사용할 수 있습니다."),
+    VERIFICATION_NOT_REQUESTED(HttpStatus.BAD_REQUEST, "인증 코드를 먼저 요청해 주세요."),
+    VERIFICATION_CODE_MISMATCH(HttpStatus.BAD_REQUEST, "인증 코드가 일치하지 않습니다."),
+    VERIFICATION_CODE_EXPIRED(HttpStatus.BAD_REQUEST, "인증 코드가 만료되었습니다. 다시 요청해 주세요."),
+    EMAIL_NOT_VERIFIED(HttpStatus.BAD_REQUEST, "이메일 인증을 먼저 완료해 주세요."),
+
     // 중고책 (3.3 ~ 3.5)
     BOOK_POST_NOT_FOUND(HttpStatus.NOT_FOUND, "판매글을 찾을 수 없습니다."),
     NOT_BOOK_POST_OWNER(HttpStatus.FORBIDDEN, "판매글 작성자만 할 수 있습니다."),

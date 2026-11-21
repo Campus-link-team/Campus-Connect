@@ -38,6 +38,8 @@ class AuthApiTest {
 
     @Test
     void 회원가입_로그인_내정보조회() throws Exception {
+        이메일_인증("test@syu.ac.kr");
+
         mockMvc.perform(post("/api/v1/auth/signup").contentType(MediaType.APPLICATION_JSON).content(SIGNUP_BODY))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.email").value("test@syu.ac.kr"))
@@ -62,6 +64,8 @@ class AuthApiTest {
 
     @Test
     void 중복_이메일과_닉네임은_409() throws Exception {
+        이메일_인증("test@syu.ac.kr");
+
         mockMvc.perform(post("/api/v1/auth/signup").contentType(MediaType.APPLICATION_JSON).content(SIGNUP_BODY))
                 .andExpect(status().isCreated());
 
@@ -93,6 +97,8 @@ class AuthApiTest {
 
     @Test
     void 틀린_비밀번호는_LOGIN_FAILED() throws Exception {
+        이메일_인증("test@syu.ac.kr");
+
         mockMvc.perform(post("/api/v1/auth/signup").contentType(MediaType.APPLICATION_JSON).content(SIGNUP_BODY))
                 .andExpect(status().isCreated());
 
@@ -100,6 +106,32 @@ class AuthApiTest {
                         .content("{\"email\":\"test@syu.ac.kr\",\"password\":\"wrong1234!\"}"))
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.error.code").value("LOGIN_FAILED"));
+    }
+
+    @Test
+    void 이메일_인증없이_가입하면_400() throws Exception {
+        mockMvc.perform(post("/api/v1/auth/signup").contentType(MediaType.APPLICATION_JSON).content(SIGNUP_BODY))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error.code").value("EMAIL_NOT_VERIFIED"));
+    }
+
+    @Test
+    void 학교_이메일이_아니면_400() throws Exception {
+        mockMvc.perform(post("/api/v1/auth/email/send-code").contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"email\":\"user@gmail.com\"}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error.code").value("INVALID_SCHOOL_EMAIL"));
+    }
+
+    @Test
+    void 인증코드가_틀리면_400() throws Exception {
+        String code = 인증코드_요청("test@syu.ac.kr");
+        String wrong = code.equals("000000") ? "111111" : "000000";
+
+        mockMvc.perform(post("/api/v1/auth/email/verify").contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"email\":\"test@syu.ac.kr\",\"code\":\"" + wrong + "\"}"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error.code").value("VERIFICATION_CODE_MISMATCH"));
     }
 
     @Test
@@ -125,5 +157,26 @@ class AuthApiTest {
         mockMvc.perform(get("/api/v1/users/me").header("Authorization", "Bearer " + expired))
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.error.code").value("TOKEN_EXPIRED"));
+    }
+
+    // Mock 이메일 인증: 코드를 요청해 응답의 mockCode를 꺼낸다
+    private String 인증코드_요청(String email) throws Exception {
+        MvcResult sent = mockMvc.perform(post("/api/v1/auth/email/send-code").contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"email\":\"" + email + "\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.expiresIn").value(300))
+                .andReturn();
+        Matcher m = Pattern.compile("\"mockCode\":\"(\\d{6})\"").matcher(sent.getResponse().getContentAsString());
+        m.find();
+        return m.group(1);
+    }
+
+    // 코드 요청부터 확인까지 마쳐서 가입 가능한 상태로 만든다
+    private void 이메일_인증(String email) throws Exception {
+        String code = 인증코드_요청(email);
+        mockMvc.perform(post("/api/v1/auth/email/verify").contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"email\":\"" + email + "\",\"code\":\"" + code + "\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.verified").value(true));
     }
 }

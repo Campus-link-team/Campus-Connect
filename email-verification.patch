@@ -1,0 +1,416 @@
+diff --git a/backend/src/main/java/com/campuslink/campusconnect/domain/auth/AuthController.java b/backend/src/main/java/com/campuslink/campusconnect/domain/auth/AuthController.java
+index c290286..c1aee10 100644
+--- a/backend/src/main/java/com/campuslink/campusconnect/domain/auth/AuthController.java
++++ b/backend/src/main/java/com/campuslink/campusconnect/domain/auth/AuthController.java
+@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
+ public class AuthController {
+ 
+     private final AuthService authService;
++    private final EmailVerificationService emailVerificationService;
+ 
+     // POST /api/v1/auth/signup
+     @PostMapping("/signup")
+@@ -27,6 +28,18 @@ public class AuthController {
+         return authService.login(request);
+     }
+ 
++    // POST /api/v1/auth/email/send-code  (Mock: 실제 메일 대신 응답의 mockCode와 서버 로그로 확인)
++    @PostMapping("/email/send-code")
++    public EmailSendResponse sendCode(@Valid @RequestBody EmailSendRequest request) {
++        return emailVerificationService.sendCode(request.email());
++    }
++
++    // POST /api/v1/auth/email/verify
++    @PostMapping("/email/verify")
++    public EmailVerifyResponse verifyEmail(@Valid @RequestBody EmailVerifyRequest request) {
++        return emailVerificationService.verify(request.email(), request.code());
++    }
++
+     // GET /api/v1/auth/nickname/check?nickname=홍길동
+     @GetMapping("/nickname/check")
+     public NicknameCheckResponse checkNickname(
+diff --git a/backend/src/main/java/com/campuslink/campusconnect/domain/auth/AuthService.java b/backend/src/main/java/com/campuslink/campusconnect/domain/auth/AuthService.java
+index 69f79c6..cd53ed1 100644
+--- a/backend/src/main/java/com/campuslink/campusconnect/domain/auth/AuthService.java
++++ b/backend/src/main/java/com/campuslink/campusconnect/domain/auth/AuthService.java
+@@ -19,19 +19,25 @@ public class AuthService {
+     private final UserRepository userRepository;
+     private final PasswordEncoder passwordEncoder;
+     private final JwtTokenProvider jwtTokenProvider;
++    private final EmailVerificationService emailVerificationService;
+ 
+-    // TODO(3.2): 학교 이메일 인증을 마친 이메일만 가입 가능하도록 EMAIL_NOT_VERIFIED 검사 추가
++    // 학교 이메일 인증(3.2)을 마친 이메일만 가입할 수 있다
+     @Transactional
+     public SignupResponse signup(SignupRequest request) {
+         String email = request.email().trim().toLowerCase();
+         String nickname = request.nickname().trim();
+ 
++        emailVerificationService.validateSchoolEmail(email);
++
+         if (userRepository.existsByEmail(email)) {
+             throw new BusinessException(ErrorCode.EMAIL_ALREADY_EXISTS);
+         }
+         if (userRepository.existsByNickname(nickname)) {
+             throw new BusinessException(ErrorCode.NICKNAME_ALREADY_EXISTS);
+         }
++        if (!emailVerificationService.isVerified(email)) {
++            throw new BusinessException(ErrorCode.EMAIL_NOT_VERIFIED);
++        }
+ 
+         User user = new User(email, passwordEncoder.encode(request.password()), nickname, request.department());
+         return SignupResponse.from(userRepository.save(user));
+diff --git a/backend/src/main/java/com/campuslink/campusconnect/domain/auth/EmailVerification.java b/backend/src/main/java/com/campuslink/campusconnect/domain/auth/EmailVerification.java
+new file mode 100644
+index 0000000..0915029
+--- /dev/null
++++ b/backend/src/main/java/com/campuslink/campusconnect/domain/auth/EmailVerification.java
+@@ -0,0 +1,57 @@
++package com.campuslink.campusconnect.domain.auth;
++
++import jakarta.persistence.*;
++import lombok.AccessLevel;
++import lombok.Getter;
++import lombok.NoArgsConstructor;
++import org.hibernate.annotations.CreationTimestamp;
++
++import java.time.LocalDateTime;
++
++// 학교 이메일 인증 요청 기록 (3.2). 요청할 때마다 새 행을 만들고, 가장 최근 행으로 확인한다.
++@Entity
++@Table(name = "email_verifications", indexes = @Index(name = "idx_email_verifications_email", columnList = "email"))
++@Getter
++@NoArgsConstructor(access = AccessLevel.PROTECTED)
++public class EmailVerification {
++
++    @Id
++    @GeneratedValue(strategy = GenerationType.IDENTITY)
++    private Long id;
++
++    @Column(nullable = false, length = 100)
++    private String email;
++
++    // 숫자 6자리 인증 코드
++    @Column(nullable = false, length = 6)
++    private String code;
++
++    @Column(nullable = false)
++    private LocalDateTime expiresAt;
++
++    @Column(nullable = false)
++    private boolean verified;
++
++    @CreationTimestamp
++    @Column(nullable = false, updatable = false)
++    private LocalDateTime createdAt;
++
++    public EmailVerification(String email, String code, LocalDateTime expiresAt) {
++        this.email = email;
++        this.code = code;
++        this.expiresAt = expiresAt;
++        this.verified = false;
++    }
++
++    public boolean isExpired(LocalDateTime now) {
++        return now.isAfter(expiresAt);
++    }
++
++    public boolean matches(String inputCode) {
++        return code.equals(inputCode);
++    }
++
++    public void markVerified() {
++        this.verified = true;
++    }
++}
+diff --git a/backend/src/main/java/com/campuslink/campusconnect/domain/auth/EmailVerificationRepository.java b/backend/src/main/java/com/campuslink/campusconnect/domain/auth/EmailVerificationRepository.java
+new file mode 100644
+index 0000000..390fdbc
+--- /dev/null
++++ b/backend/src/main/java/com/campuslink/campusconnect/domain/auth/EmailVerificationRepository.java
+@@ -0,0 +1,14 @@
++package com.campuslink.campusconnect.domain.auth;
++
++import org.springframework.data.jpa.repository.JpaRepository;
++
++import java.util.Optional;
++
++public interface EmailVerificationRepository extends JpaRepository<EmailVerification, Long> {
++
++    // 가장 최근에 요청한 인증 코드
++    Optional<EmailVerification> findTopByEmailOrderByIdDesc(String email);
++
++    // 인증을 마친 기록이 있는지 (회원가입 시 확인)
++    boolean existsByEmailAndVerifiedTrue(String email);
++}
+diff --git a/backend/src/main/java/com/campuslink/campusconnect/domain/auth/EmailVerificationService.java b/backend/src/main/java/com/campuslink/campusconnect/domain/auth/EmailVerificationService.java
+new file mode 100644
+index 0000000..0734a97
+--- /dev/null
++++ b/backend/src/main/java/com/campuslink/campusconnect/domain/auth/EmailVerificationService.java
+@@ -0,0 +1,81 @@
++package com.campuslink.campusconnect.domain.auth;
++
++import com.campuslink.campusconnect.domain.auth.dto.EmailSendResponse;
++import com.campuslink.campusconnect.domain.auth.dto.EmailVerifyResponse;
++import com.campuslink.campusconnect.domain.user.UserRepository;
++import com.campuslink.campusconnect.global.exception.BusinessException;
++import com.campuslink.campusconnect.global.exception.ErrorCode;
++import lombok.RequiredArgsConstructor;
++import lombok.extern.slf4j.Slf4j;
++import org.springframework.beans.factory.annotation.Value;
++import org.springframework.stereotype.Service;
++import org.springframework.transaction.annotation.Transactional;
++
++import java.security.SecureRandom;
++import java.time.LocalDateTime;
++
++// 학교 이메일 인증 (3.2). 요구사항 FR-002에 따라 실제 메일은 보내지 않는 Mock 방식이다.
++// 인증 코드는 서버 로그와 send-code 응답의 mockCode로 확인한다.
++@Slf4j
++@Service
++@RequiredArgsConstructor
++@Transactional(readOnly = true)
++public class EmailVerificationService {
++
++    private static final long CODE_TTL_SECONDS = 300; // 5분
++    private static final SecureRandom RANDOM = new SecureRandom();
++
++    private final EmailVerificationRepository emailVerificationRepository;
++    private final UserRepository userRepository;
++
++    @Value("${campus.email.allowed-domain:syu.ac.kr}")
++    private String allowedDomain;
++
++    @Transactional
++    public EmailSendResponse sendCode(String rawEmail) {
++        String email = normalize(rawEmail);
++        validateSchoolEmail(email);
++        if (userRepository.existsByEmail(email)) {
++            throw new BusinessException(ErrorCode.EMAIL_ALREADY_EXISTS);
++        }
++
++        String code = String.format("%06d", RANDOM.nextInt(1_000_000));
++        emailVerificationRepository.save(
++                new EmailVerification(email, code, LocalDateTime.now().plusSeconds(CODE_TTL_SECONDS)));
++
++        log.info("[Mock 이메일 인증] {} 인증 코드: {}", email, code);
++        return new EmailSendResponse(CODE_TTL_SECONDS, code);
++    }
++
++    @Transactional
++    public EmailVerifyResponse verify(String rawEmail, String code) {
++        String email = normalize(rawEmail);
++        EmailVerification verification = emailVerificationRepository.findTopByEmailOrderByIdDesc(email)
++                .orElseThrow(() -> new BusinessException(ErrorCode.VERIFICATION_NOT_REQUESTED));
++
++        if (verification.isExpired(LocalDateTime.now())) {
++            throw new BusinessException(ErrorCode.VERIFICATION_CODE_EXPIRED);
++        }
++        if (!verification.matches(code.trim())) {
++            throw new BusinessException(ErrorCode.VERIFICATION_CODE_MISMATCH);
++        }
++
++        verification.markVerified();
++        return new EmailVerifyResponse(true);
++    }
++
++    // 학교 도메인(@syu.ac.kr) 이메일인지 확인
++    public void validateSchoolEmail(String email) {
++        if (!normalize(email).endsWith("@" + allowedDomain.toLowerCase())) {
++            throw new BusinessException(ErrorCode.INVALID_SCHOOL_EMAIL);
++        }
++    }
++
++    public boolean isVerified(String email) {
++        return emailVerificationRepository.existsByEmailAndVerifiedTrue(normalize(email));
++    }
++
++    private String normalize(String email) {
++        return email.trim().toLowerCase();
++    }
++}
+diff --git a/backend/src/main/java/com/campuslink/campusconnect/domain/auth/dto/EmailSendRequest.java b/backend/src/main/java/com/campuslink/campusconnect/domain/auth/dto/EmailSendRequest.java
+new file mode 100644
+index 0000000..7de7be3
+--- /dev/null
++++ b/backend/src/main/java/com/campuslink/campusconnect/domain/auth/dto/EmailSendRequest.java
+@@ -0,0 +1,12 @@
++package com.campuslink.campusconnect.domain.auth.dto;
++
++import jakarta.validation.constraints.Email;
++import jakarta.validation.constraints.NotBlank;
++
++public record EmailSendRequest(
++
++        @NotBlank(message = "이메일을 입력해 주세요.")
++        @Email(message = "이메일 형식이 올바르지 않습니다.")
++        String email
++) {
++}
+diff --git a/backend/src/main/java/com/campuslink/campusconnect/domain/auth/dto/EmailSendResponse.java b/backend/src/main/java/com/campuslink/campusconnect/domain/auth/dto/EmailSendResponse.java
+new file mode 100644
+index 0000000..38d34ef
+--- /dev/null
++++ b/backend/src/main/java/com/campuslink/campusconnect/domain/auth/dto/EmailSendResponse.java
+@@ -0,0 +1,6 @@
++package com.campuslink.campusconnect.domain.auth.dto;
++
++// expiresIn: 인증 코드 유효 시간(초)
++// mockCode: Mock 방식이라 실제 메일 대신 응답으로 코드를 돌려준다. 실제 메일 발송으로 바꾸면 이 필드를 지운다.
++public record EmailSendResponse(long expiresIn, String mockCode) {
++}
+diff --git a/backend/src/main/java/com/campuslink/campusconnect/domain/auth/dto/EmailVerifyRequest.java b/backend/src/main/java/com/campuslink/campusconnect/domain/auth/dto/EmailVerifyRequest.java
+new file mode 100644
+index 0000000..40b3f50
+--- /dev/null
++++ b/backend/src/main/java/com/campuslink/campusconnect/domain/auth/dto/EmailVerifyRequest.java
+@@ -0,0 +1,17 @@
++package com.campuslink.campusconnect.domain.auth.dto;
++
++import jakarta.validation.constraints.Email;
++import jakarta.validation.constraints.NotBlank;
++import jakarta.validation.constraints.Pattern;
++
++public record EmailVerifyRequest(
++
++        @NotBlank(message = "이메일을 입력해 주세요.")
++        @Email(message = "이메일 형식이 올바르지 않습니다.")
++        String email,
++
++        @NotBlank(message = "인증 코드를 입력해 주세요.")
++        @Pattern(regexp = "^\\d{6}$", message = "인증 코드는 숫자 6자리입니다.")
++        String code
++) {
++}
+diff --git a/backend/src/main/java/com/campuslink/campusconnect/domain/auth/dto/EmailVerifyResponse.java b/backend/src/main/java/com/campuslink/campusconnect/domain/auth/dto/EmailVerifyResponse.java
+new file mode 100644
+index 0000000..d360370
+--- /dev/null
++++ b/backend/src/main/java/com/campuslink/campusconnect/domain/auth/dto/EmailVerifyResponse.java
+@@ -0,0 +1,4 @@
++package com.campuslink.campusconnect.domain.auth.dto;
++
++public record EmailVerifyResponse(boolean verified) {
++}
+diff --git a/backend/src/main/java/com/campuslink/campusconnect/global/exception/ErrorCode.java b/backend/src/main/java/com/campuslink/campusconnect/global/exception/ErrorCode.java
+index 0da6baf..6e992c8 100644
+--- a/backend/src/main/java/com/campuslink/campusconnect/global/exception/ErrorCode.java
++++ b/backend/src/main/java/com/campuslink/campusconnect/global/exception/ErrorCode.java
+@@ -18,6 +18,13 @@ public enum ErrorCode {
+     CONFLICT(HttpStatus.CONFLICT, "요청을 처리할 수 없는 상태입니다."),
+     FORBIDDEN(HttpStatus.FORBIDDEN, "접근 권한이 없습니다."),
+ 
++    // 학교 이메일 인증 (3.2, Mock)
++    INVALID_SCHOOL_EMAIL(HttpStatus.BAD_REQUEST, "학교 이메일만 사용할 수 있습니다."),
++    VERIFICATION_NOT_REQUESTED(HttpStatus.BAD_REQUEST, "인증 코드를 먼저 요청해 주세요."),
++    VERIFICATION_CODE_MISMATCH(HttpStatus.BAD_REQUEST, "인증 코드가 일치하지 않습니다."),
++    VERIFICATION_CODE_EXPIRED(HttpStatus.BAD_REQUEST, "인증 코드가 만료되었습니다. 다시 요청해 주세요."),
++    EMAIL_NOT_VERIFIED(HttpStatus.BAD_REQUEST, "이메일 인증을 먼저 완료해 주세요."),
++
+     // 중고책 (3.3 ~ 3.5)
+     BOOK_POST_NOT_FOUND(HttpStatus.NOT_FOUND, "판매글을 찾을 수 없습니다."),
+     NOT_BOOK_POST_OWNER(HttpStatus.FORBIDDEN, "판매글 작성자만 할 수 있습니다."),
+diff --git a/backend/src/main/resources/application.yml b/backend/src/main/resources/application.yml
+index 536de59..4c21dbd 100644
+--- a/backend/src/main/resources/application.yml
++++ b/backend/src/main/resources/application.yml
+@@ -16,3 +16,8 @@ spring:
+ jwt:
+   secret: ${JWT_SECRET:campus-connect-local-dev-secret-key-change-me}
+   expiration-seconds: 3600
++
++# 학교 이메일 인증 (3.2, Mock). 허용할 학교 이메일 도메인
++campus:
++  email:
++    allowed-domain: ${SCHOOL_EMAIL_DOMAIN:syu.ac.kr}
+diff --git a/backend/src/test/java/com/campuslink/campusconnect/domain/auth/AuthApiTest.java b/backend/src/test/java/com/campuslink/campusconnect/domain/auth/AuthApiTest.java
+index 274dae7..73c4996 100644
+--- a/backend/src/test/java/com/campuslink/campusconnect/domain/auth/AuthApiTest.java
++++ b/backend/src/test/java/com/campuslink/campusconnect/domain/auth/AuthApiTest.java
+@@ -38,6 +38,8 @@ class AuthApiTest {
+ 
+     @Test
+     void 회원가입_로그인_내정보조회() throws Exception {
++        이메일_인증("test@syu.ac.kr");
++
+         mockMvc.perform(post("/api/v1/auth/signup").contentType(MediaType.APPLICATION_JSON).content(SIGNUP_BODY))
+                 .andExpect(status().isCreated())
+                 .andExpect(jsonPath("$.email").value("test@syu.ac.kr"))
+@@ -62,6 +64,8 @@ class AuthApiTest {
+ 
+     @Test
+     void 중복_이메일과_닉네임은_409() throws Exception {
++        이메일_인증("test@syu.ac.kr");
++
+         mockMvc.perform(post("/api/v1/auth/signup").contentType(MediaType.APPLICATION_JSON).content(SIGNUP_BODY))
+                 .andExpect(status().isCreated());
+ 
+@@ -93,6 +97,8 @@ class AuthApiTest {
+ 
+     @Test
+     void 틀린_비밀번호는_LOGIN_FAILED() throws Exception {
++        이메일_인증("test@syu.ac.kr");
++
+         mockMvc.perform(post("/api/v1/auth/signup").contentType(MediaType.APPLICATION_JSON).content(SIGNUP_BODY))
+                 .andExpect(status().isCreated());
+ 
+@@ -102,6 +108,32 @@ class AuthApiTest {
+                 .andExpect(jsonPath("$.error.code").value("LOGIN_FAILED"));
+     }
+ 
++    @Test
++    void 이메일_인증없이_가입하면_400() throws Exception {
++        mockMvc.perform(post("/api/v1/auth/signup").contentType(MediaType.APPLICATION_JSON).content(SIGNUP_BODY))
++                .andExpect(status().isBadRequest())
++                .andExpect(jsonPath("$.error.code").value("EMAIL_NOT_VERIFIED"));
++    }
++
++    @Test
++    void 학교_이메일이_아니면_400() throws Exception {
++        mockMvc.perform(post("/api/v1/auth/email/send-code").contentType(MediaType.APPLICATION_JSON)
++                        .content("{\"email\":\"user@gmail.com\"}"))
++                .andExpect(status().isBadRequest())
++                .andExpect(jsonPath("$.error.code").value("INVALID_SCHOOL_EMAIL"));
++    }
++
++    @Test
++    void 인증코드가_틀리면_400() throws Exception {
++        String code = 인증코드_요청("test@syu.ac.kr");
++        String wrong = code.equals("000000") ? "111111" : "000000";
++
++        mockMvc.perform(post("/api/v1/auth/email/verify").contentType(MediaType.APPLICATION_JSON)
++                        .content("{\"email\":\"test@syu.ac.kr\",\"code\":\"" + wrong + "\"}"))
++                .andExpect(status().isBadRequest())
++                .andExpect(jsonPath("$.error.code").value("VERIFICATION_CODE_MISMATCH"));
++    }
++
+     @Test
+     void 토큰없이_내정보조회는_401() throws Exception {
+         mockMvc.perform(get("/api/v1/users/me"))
+@@ -126,4 +158,25 @@ class AuthApiTest {
+                 .andExpect(status().isUnauthorized())
+                 .andExpect(jsonPath("$.error.code").value("TOKEN_EXPIRED"));
+     }
++
++    // Mock 이메일 인증: 코드를 요청해 응답의 mockCode를 꺼낸다
++    private String 인증코드_요청(String email) throws Exception {
++        MvcResult sent = mockMvc.perform(post("/api/v1/auth/email/send-code").contentType(MediaType.APPLICATION_JSON)
++                        .content("{\"email\":\"" + email + "\"}"))
++                .andExpect(status().isOk())
++                .andExpect(jsonPath("$.expiresIn").value(300))
++                .andReturn();
++        Matcher m = Pattern.compile("\"mockCode\":\"(\\d{6})\"").matcher(sent.getResponse().getContentAsString());
++        m.find();
++        return m.group(1);
++    }
++
++    // 코드 요청부터 확인까지 마쳐서 가입 가능한 상태로 만든다
++    private void 이메일_인증(String email) throws Exception {
++        String code = 인증코드_요청(email);
++        mockMvc.perform(post("/api/v1/auth/email/verify").contentType(MediaType.APPLICATION_JSON)
++                        .content("{\"email\":\"" + email + "\",\"code\":\"" + code + "\"}"))
++                .andExpect(status().isOk())
++                .andExpect(jsonPath("$.verified").value(true));
++    }
+ }

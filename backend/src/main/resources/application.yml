@@ -16,3 +16,8 @@ spring:
 jwt:
   secret: ${JWT_SECRET:campus-connect-local-dev-secret-key-change-me}
   expiration-seconds: 3600
+
+# 학교 이메일 인증 (3.2, Mock). 허용할 학교 이메일 도메인
+campus:
+  email:
+    allowed-domain: ${SCHOOL_EMAIL_DOMAIN:syu.ac.kr}
