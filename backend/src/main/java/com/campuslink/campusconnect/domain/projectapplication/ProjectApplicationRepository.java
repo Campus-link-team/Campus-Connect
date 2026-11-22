@@ -3,6 +3,8 @@ package com.campuslink.campusconnect.domain.projectapplication;
 import com.campuslink.campusconnect.domain.projectpost.ProjectPost;
 import com.campuslink.campusconnect.domain.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.query.Param;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
@@ -23,4 +25,8 @@ public interface ProjectApplicationRepository extends JpaRepository<ProjectAppli
 
     // 특정 회원이 지원한 총 횟수 계산
     int countByUser(User user);
+
+    // 내 지원 내역 + 모집글 (최신순, 마이페이지)
+    @Query("select a from ProjectApplication a join fetch a.projectPost where a.user.id = :userId order by a.appliedAt desc, a.id desc")
+    List<ProjectApplication> findMineWithPost(@Param("userId") Long userId);
 }

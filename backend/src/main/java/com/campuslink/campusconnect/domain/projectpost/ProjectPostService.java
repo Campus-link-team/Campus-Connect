@@ -256,6 +256,22 @@ public class ProjectPostService {
                 .toList();
     }
 
+    // 마이페이지: 내가 쓴 모집글
+    @Transactional(readOnly = true)
+    public List<ProjectPostResponse> getMyProjects(Long userId) {
+        return projectPostRepository.findMine(userId).stream()
+                .map(ProjectPostResponse::from)
+                .toList();
+    }
+
+    // 마이페이지: 내 지원 내역
+    @Transactional(readOnly = true)
+    public List<MyApplicationResponse> getMyApplications(Long userId) {
+        return projectApplicationRepository.findMineWithPost(userId).stream()
+                .map(MyApplicationResponse::from)
+                .toList();
+    }
+
     // 모집글 작성자 본인인지 확인 (아니면 403)
     private void validateWriter(ProjectPost post, Long userId, String message) {
         if (post.getUser() == null || !post.getUser().getId().equals(userId)) {
