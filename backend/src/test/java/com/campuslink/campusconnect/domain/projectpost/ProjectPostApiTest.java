@@ -121,4 +121,26 @@ class ProjectPostApiTest {
                         .contentType(MediaType.APPLICATION_JSON).content("{\"status\":\"APPROVED\"}"))
                 .andExpect(status().isForbidden());
     }
+
+    @Test
+    void 마이페이지_내_모집글과_지원_내역() throws Exception {
+        mockMvc.perform(post("/api/v1/projects/" + post.getId() + "/applications").header("Authorization", token(applicant))
+                        .contentType(MediaType.APPLICATION_JSON).content("{\"roleName\":\"백엔드\",\"introduction\":\"지원합니다\"}"))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(get("/api/v1/users/me/projects").header("Authorization", token(writer)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", hasSize(1)))
+                .andExpect(jsonPath("$.data[0].title").value("캡스톤 팀원 모집"));
+
+        mockMvc.perform(get("/api/v1/users/me/applications").header("Authorization", token(applicant)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", hasSize(1)))
+                .andExpect(jsonPath("$.data[0].projectTitle").value("캡스톤 팀원 모집"))
+                .andExpect(jsonPath("$.data[0].status").value("PENDING"));
+
+        mockMvc.perform(get("/api/v1/users/me/applications").header("Authorization", token(other)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", hasSize(0)));
+    }
 }

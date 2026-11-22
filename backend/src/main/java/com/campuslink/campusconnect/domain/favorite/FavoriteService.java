@@ -2,12 +2,14 @@ package com.campuslink.campusconnect.domain.favorite;
 
 import com.campuslink.campusconnect.domain.bookpost.BookPost;
 import com.campuslink.campusconnect.domain.bookpost.BookPostRepository;
+import com.campuslink.campusconnect.domain.bookpost.dto.BookPostResponse;
 import com.campuslink.campusconnect.domain.user.User;
 import com.campuslink.campusconnect.domain.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -42,5 +44,13 @@ public class FavoriteService {
             favoriteRepository.save(favorite);
             return "찜이 등록되었습니다.";
         }
+    }
+
+    // 마이페이지: 내가 찜한 판매글 (삭제된 판매글은 찜도 함께 지워지므로 따로 거르지 않음)
+    @Transactional(readOnly = true)
+    public List<BookPostResponse> getMyFavorites(Long userId) {
+        return favoriteRepository.findMine(userId).stream()
+                .map(favorite -> BookPostResponse.from(favorite.getBookPost()))
+                .toList();
     }
 }

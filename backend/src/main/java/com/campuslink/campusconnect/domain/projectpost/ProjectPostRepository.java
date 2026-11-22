@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 // JpaRepository<다룰 엔티티 클래스, 그 엔티티의 PK(ID) 데이터 타입>
@@ -17,4 +18,8 @@ public interface ProjectPostRepository extends JpaRepository<ProjectPost, Long> 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select p from ProjectPost p where p.id = :id")
     Optional<ProjectPost> findByIdWithPessimisticLock(@Param("id") Long id);
+
+    // 내가 쓴 모집글 (최신순, 마이페이지)
+    @Query("select p from ProjectPost p join fetch p.user where p.user.id = :userId order by p.id desc")
+    List<ProjectPost> findMine(@Param("userId") Long userId);
 }

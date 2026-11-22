@@ -284,4 +284,18 @@ class BookPostApiTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data", hasSize(2)));
     }
+
+    @Test
+    void 마이페이지_찜_목록에는_내가_찜한_글만_나온다() throws Exception {
+        long id = createBookId(seller, "자료구조", "홍길동", "MAJOR");
+        createBookId(seller, "운영체제", "김철수", "MAJOR");
+
+        mockMvc.perform(post("/api/v1/books/" + id + "/favorite").header("Authorization", token(buyer)))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/api/v1/users/me/favorites").header("Authorization", token(buyer)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", hasSize(1)))
+                .andExpect(jsonPath("$.data[0].title").value("자료구조"));
+    }
 }
