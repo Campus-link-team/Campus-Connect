@@ -1,5 +1,6 @@
 package com.campuslink.campusconnect.domain.bookpost;
 
+import com.campuslink.campusconnect.domain.chat.ChatRoom;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -45,4 +46,15 @@ public interface BookPostRepository extends JpaRepository<BookPost, Long> {
     @Modifying
     @Query("delete from Favorite f where f.bookPost.id = :bookPostId")
     void deleteFavorites(@Param("bookPostId") Long bookPostId);
+
+    // 이 판매글로 열린 채팅방 (구매자 후보 조회용)
+    @Query("""
+            select c from ChatRoom c join fetch c.user1 join fetch c.user2
+            where c.contextType = 'BOOK' and c.contextId = :bookPostId
+            """)
+    List<ChatRoom> findBookChatRooms(@Param("bookPostId") Long bookPostId);
+
+    // 내 판매글 (최신순)
+    @Query("select b from BookPost b join fetch b.seller where b.seller.id = :sellerId order by b.createdAt desc, b.id desc")
+    List<BookPost> findMine(@Param("sellerId") Long sellerId);
 }

@@ -4,6 +4,7 @@ import com.campuslink.campusconnect.domain.bookpost.dto.BookPostCreateRequest;
 import com.campuslink.campusconnect.domain.bookpost.dto.BookPostResponse;
 import com.campuslink.campusconnect.domain.bookpost.dto.BookPostUpdateRequest;
 import com.campuslink.campusconnect.domain.bookpost.dto.BookStatusUpdateRequest;
+import com.campuslink.campusconnect.domain.bookpost.dto.ChatPartnerResponse;
 import com.campuslink.campusconnect.global.common.ApiResponse;
 import com.campuslink.campusconnect.global.security.LoginUser;
 import jakarta.validation.Valid;
@@ -69,5 +70,13 @@ public class BookPostController {
             @PathVariable Long id,
             @Valid @RequestBody BookStatusUpdateRequest request) {
         return ResponseEntity.ok(ApiResponse.success(bookPostService.changeStatus(userId, id, request)));
+    }
+
+    // GET /api/v1/books/{id}/chat-partners  (작성자만) 거래완료 시 고를 구매자 후보
+    @GetMapping("/{id}/chat-partners")
+    public ResponseEntity<ApiResponse<List<ChatPartnerResponse>>> getChatPartners(
+            @LoginUser Long userId,
+            @PathVariable Long id) {
+        return ResponseEntity.ok(ApiResponse.success(bookPostService.getChatPartners(userId, id)));
     }
 }

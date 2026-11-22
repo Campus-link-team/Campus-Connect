@@ -244,4 +244,44 @@ class BookPostApiTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error.code").value("INVALID_INPUT"));
     }
+
+    @Test
+    void 판매글_목록과_상세는_로그인_없이_볼_수_있다() throws Exception {
+        long id = createBookId(seller, "자료구조", "홍길동", "MAJOR");
+
+        mockMvc.perform(get("/api/v1/books"))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/api/v1/books/" + id))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.title").value("자료구조"));
+    }
+
+    @Test
+    void 구매자_후보는_채팅한_회원이고_작성자만_볼_수_있다() throws Exception {
+        long id = createBookId(seller, "자료구조", "홍길동", "MAJOR");
+        chatRoomRepository.save(new ChatRoom("BOOK", id, buyer, seller));
+
+        mockMvc.perform(get("/api/v1/books/" + id + "/chat-partners").header("Authorization", token(seller)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", hasSize(1)))
+                .andExpect(jsonPath("$.data[0].userId").value(buyer.getId()))
+                .andExpect(jsonPath("$.data[0].nickname").value("구매자T"));
+
+        mockMvc.perform(get("/api/v1/books/" + id + "/chat-partners").header("Authorization", token(other)))
+                .andExpect(status().isForbidden());
+
+        mockMvc.perform(get("/api/v1/books/" + id + "/chat-partners"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void 내_판매글_목록에는_내_글만_나온다() throws Exception {
+        createBookId(seller, "자료구조", "홍길동", "MAJOR");
+        createBookId(seller, "운영체제", "김철수", "MAJOR");
+        createBookId(other, "경제학원론", "이영희", "GENERAL");
+
+        mockMvc.perform(get("/api/v1/users/me/books").header("Authorization", token(seller)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", hasSize(2)));
+    }
 }
