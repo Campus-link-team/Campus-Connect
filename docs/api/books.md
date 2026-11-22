@@ -15,8 +15,10 @@
 | 메서드 | 경로 | 설명 | 권한 |
 |---|---|---|---|
 | POST | `/api/v1/books` | 판매글 등록 (상태는 `ON_SALE` 로 시작) | 로그인 |
-| GET | `/api/v1/books?category=&status=&keyword=` | 목록. 모두 선택. `keyword` 는 교재명·저자 검색 | 로그인 |
-| GET | `/api/v1/books/{id}` | 상세 | 로그인 |
+| GET | `/api/v1/books?category=&status=&keyword=` | 목록. 모두 선택. `keyword` 는 교재명·저자 검색 | 없음 |
+| GET | `/api/v1/books/{id}` | 상세 | 없음 |
+| GET | `/api/v1/books/{id}/chat-partners` | 구매자 후보 (이 판매글로 채팅한 회원 id·닉네임) | 작성자 |
+| GET | `/api/v1/users/me/books` | 내 판매글 목록 | 로그인 |
 | PATCH | `/api/v1/books/{id}` | 수정 (보낸 필드만 변경, 모집글 수정과 같은 방식) | 작성자 |
 | DELETE | `/api/v1/books/{id}` | 삭제 | 작성자 |
 | PATCH | `/api/v1/books/{id}/status` | 판매 상태 변경 | 작성자 |

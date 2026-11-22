@@ -48,6 +48,10 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         // 모집글은 조회(GET)만 로그인 없이 허용, 작성·수정·삭제·지원은 로그인 필요
                         .requestMatchers(HttpMethod.GET, "/api/v1/projects/**").permitAll()
+                        // 판매글·후기 조회는 로그인 없이 허용. 단 구매자 후보 조회는 작성자만이라 먼저 막는다 (순서 중요)
+                        .requestMatchers(HttpMethod.GET, "/api/v1/books/*/chat-partners").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/books/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/users/*/reviews").permitAll()
                         // WebSocket(STOMP) 핸드셰이크 엔드포인트
                         .requestMatchers("/ws-chat/**").permitAll()
                         .requestMatchers("/error").permitAll()

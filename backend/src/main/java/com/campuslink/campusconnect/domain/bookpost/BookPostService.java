@@ -4,6 +4,8 @@ import com.campuslink.campusconnect.domain.bookpost.dto.BookPostCreateRequest;
 import com.campuslink.campusconnect.domain.bookpost.dto.BookPostResponse;
 import com.campuslink.campusconnect.domain.bookpost.dto.BookPostUpdateRequest;
 import com.campuslink.campusconnect.domain.bookpost.dto.BookStatusUpdateRequest;
+import com.campuslink.campusconnect.domain.bookpost.dto.ChatPartnerResponse;
+import com.campuslink.campusconnect.domain.chat.ChatRoom;
 import com.campuslink.campusconnect.domain.user.User;
 import com.campuslink.campusconnect.domain.user.UserRepository;
 import com.campuslink.campusconnect.global.exception.BusinessException;
@@ -12,7 +14,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -92,6 +96,26 @@ public class BookPostService {
         }
         bookPostRepository.flush();
         return BookPostResponse.from(post);
+    }
+
+    // 구매자 후보: 이 판매글로 채팅한 회원 목록 (작성자만 조회, 판매자 본인 제외)
+    public List<ChatPartnerResponse> getChatPartners(Long loginUserId, Long bookPostId) {
+        BookPost post = findOwnPost(loginUserId, bookPostId);
+        Map<Long, ChatPartnerResponse> partners = new LinkedHashMap<>();
+        for (ChatRoom room : bookPostRepository.findBookChatRooms(post.getId())) {
+            User opponent = room.getOpponent(loginUserId);
+            if (!post.isSeller(opponent.getId())) {
+                partners.putIfAbsent(opponent.getId(), new ChatPartnerResponse(opponent.getId(), opponent.getNickname()));
+            }
+        }
+        return List.copyOf(partners.values());
+    }
+
+    // 내 판매글 목록 (마이페이지)
+    public List<BookPostResponse> getMine(Long loginUserId) {
+        return bookPostRepository.findMine(loginUserId).stream()
+                .map(BookPostResponse::from)
+                .toList();
     }
 
     // buyerId 가 없으면 구매자 없이 거래완료, 있으면 이 판매글로 채팅한 회원인지 확인
