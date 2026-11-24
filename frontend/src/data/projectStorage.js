@@ -34,7 +34,7 @@ function saveProjects(projects) {
     )
   } catch (error) {
     console.error('프로젝트 저장에 실패했습니다.', error)
-    throw new Error('프로젝트 정보를 저장하지 못했습니다.')
+    throw new Error('프로젝트 정보를 저장하지 못했습니다.', { cause: error })
   }
 }
 

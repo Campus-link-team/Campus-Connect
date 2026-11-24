@@ -1,6 +1,6 @@
 
 /* ========================================
-   CampusLink - Book Detail
+   CampusConnect - Book Detail
    ======================================== */
 
 .book-detail-page {
@@ -541,4 +541,126 @@
   .book-delete-button {
     width: 100%;
   }
+}
+
+
+/* 판매자 채팅 버튼 활성화 스타일 */
+.book-detail-contact {
+  cursor: pointer;
+  background: var(--color-primary);
+  color: #FFFFFF;
+  transition: background 0.2s, opacity 0.2s;
+}
+
+.book-detail-contact:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+}
+
+/* 실제 비활성화 상태 */
+.book-detail-contact:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+
+/* 거래 완료 및 구매자 선택 */
+.book-transaction-form {
+  margin-top: 20px;
+  padding: 22px;
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  background: var(--color-background);
+}
+
+.book-transaction-form-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.book-transaction-form-heading > div {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--color-primary);
+}
+
+.book-transaction-form-heading h3 {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 16px;
+}
+
+.book-transaction-form-heading > button {
+  display: grid;
+  place-items: center;
+  padding: 5px;
+  border: 0;
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+
+.book-transaction-form > p {
+  margin: 0 0 18px;
+  color: var(--color-text-muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.book-transaction-form > label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.book-transaction-form > select {
+  width: 100%;
+  min-height: 43px;
+  padding: 0 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 9px;
+  background: white;
+  color: var(--color-text);
+  font-size: 13px;
+}
+
+.book-transaction-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 9px;
+  margin-top: 18px;
+}
+
+.book-transaction-form-actions button {
+  min-height: 39px;
+  padding: 0 15px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.book-transaction-cancel {
+  border: 1px solid var(--color-border);
+  background: white;
+  color: var(--color-text-muted);
+}
+
+.book-transaction-complete {
+  border: 0;
+  background: var(--color-primary);
+  color: white;
+}
+
+.book-transaction-complete:disabled {
+  background: #B9C8BD;
+  cursor: not-allowed;
+}
+
+.book-detail-management-actions button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }

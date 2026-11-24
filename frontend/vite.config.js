@@ -9,6 +9,12 @@ export default defineConfig(({ mode }) => {
   return {
     base: isPresentation ? './' : '/',
 
+    server: {
+      proxy: {
+        '/api': { target: 'http://localhost:8080', changeOrigin: true },
+      },
+    },
+
     plugins: [
       react(),
 

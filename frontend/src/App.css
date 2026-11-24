@@ -409,7 +409,7 @@
 }
 
 /* ========================================
-   CampusLink - Temporary Pages
+   CampusConnect - Temporary Pages
    ======================================== */
 
 .coming-soon {
@@ -452,3 +452,76 @@
   color: var(--color-text-muted);
   font-size: 14px;
 }
+
+.app-loading {
+  min-height: 60vh;
+  display: grid;
+  place-items: center;
+  color: var(--color-text-muted, #64748b);
+  font-size: 14px;
+}
+
+/* API 연동 화면 보완 스타일 */
+.book-detail-layout { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 24px; margin-top: 18px; }
+.book-detail-main { min-width: 0; padding: 24px; background: var(--color-surface, #fff); border: 1px solid var(--color-border, #e5e7eb); border-radius: 16px; }
+.book-detail-image { min-height: 210px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 12px; padding: 25px; border-radius: 14px; background: var(--color-primary-soft, #edf7f0); color: var(--color-primary, #237a4b); }
+.book-detail-image span { max-width: 100%; color: var(--color-text, #1f2937); font-weight: 700; text-align: center; }
+.book-detail-content { padding-top: 22px; }
+.book-detail-content h1 { margin: 12px 0 5px; font-size: 28px; }
+.book-detail-subtitle { color: var(--color-text-muted, #64748b); }
+.book-detail-price { display: block; margin: 18px 0 28px; font-size: 27px; }
+.book-detail-description { padding: 18px 0; border-top: 1px solid var(--color-border, #e5e7eb); }
+.book-detail-description h2 { margin: 0 0 10px; font-size: 16px; }
+.book-detail-description p { color: var(--color-text-muted, #64748b); line-height: 1.7; white-space: pre-wrap; }
+.book-detail-sidebar { align-self: start; display: flex; flex-direction: column; gap: 12px; padding: 20px; border: 1px solid var(--color-border, #e5e7eb); border-radius: 16px; background: var(--color-surface, #fff); }
+.book-detail-seller { display: flex; flex-direction: column; gap: 7px; padding-bottom: 16px; border-bottom: 1px solid var(--color-border, #e5e7eb); }
+.book-detail-seller span, .book-detail-seller small { color: var(--color-text-muted, #64748b); font-size: 12px; }
+.book-detail-primary, .book-detail-favorite, .book-detail-edit, .book-detail-delete { min-height: 42px; display: inline-flex; justify-content: center; align-items: center; gap: 8px; padding: 10px 14px; border-radius: 9px; text-decoration: none; font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; }
+.book-detail-primary { color: white; border: 1px solid var(--color-primary, #237a4b); background: var(--color-primary, #237a4b); }
+.book-detail-favorite { color: var(--color-text, #1f2937); border: 1px solid var(--color-border, #e5e7eb); background: #fff; }
+.book-detail-favorite.is-favorite { color: #d64545; }
+.book-detail-owner-actions { display: flex; flex-direction: column; gap: 10px; }
+.book-detail-owner-actions label { margin-top: 5px; font-size: 12px; font-weight: 700; }
+.book-detail-owner-actions select { min-height: 40px; padding: 8px; border: 1px solid var(--color-border, #e5e7eb); border-radius: 8px; background: white; }
+.book-detail-edit { color: var(--color-primary, #237a4b); border: 1px solid var(--color-border, #e5e7eb); background: white; }
+.book-detail-delete { color: #b42318; border: 1px solid #f0c9c5; background: white; }
+.book-detail-review { margin-top: 22px; padding: 22px; border: 1px solid var(--color-border, #e5e7eb); border-radius: 14px; background: white; }
+.book-detail-review h2 { display: flex; align-items: center; gap: 8px; margin: 0 0 12px; font-size: 18px; }
+.book-detail-review strong { color: #d99b27; }
+.book-detail-review p { line-height: 1.7; }
+.book-detail-review small { color: var(--color-text-muted, #64748b); }
+.project-detail-info-list { display: grid; gap: 12px; }
+.project-detail-info-list p { display: flex; align-items: center; gap: 9px; margin: 0; color: var(--color-text-muted, #64748b); font-size: 14px; }
+.project-detail-summary { padding: 20px; border-radius: 12px; background: var(--color-background, #f7f9f7); }
+.project-detail-summary span { display: block; color: var(--color-text-muted, #64748b); font-size: 12px; }
+.project-detail-summary strong { display: block; margin: 8px 0 14px; font-size: 22px; }
+.project-progress { height: 7px; overflow: hidden; border-radius: 8px; background: #e5e7eb; }
+.project-progress span { display: block; height: 100%; background: var(--color-primary, #237a4b); }
+.project-detail-owner-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 14px; }
+.project-detail-owner-actions a, .project-detail-owner-actions button { min-height: 42px; display: inline-flex; justify-content: center; align-items: center; gap: 8px; padding: 10px; border: 1px solid var(--color-border, #e5e7eb); border-radius: 9px; background: white; color: var(--color-text, #1f2937); font: inherit; font-size: 13px; font-weight: 700; text-decoration: none; cursor: pointer; }
+.project-detail-owner-actions .project-detail-apply-button { border-color: var(--color-primary, #237a4b); background: var(--color-primary, #237a4b); color: white; }
+.project-detail-owner-actions .project-detail-delete-button { color: #b42318; }
+.review-submit { width: 100%; min-height: 46px; display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 22px; border: 0; border-radius: 10px; background: var(--color-primary, #237a4b); color: white; font: inherit; font-weight: 700; cursor: pointer; }
+@media (max-width: 760px) { .book-detail-layout { grid-template-columns: 1fr; } .book-detail-sidebar { order: -1; } }
+
+.project-apply-form { display: flex; flex-direction: column; gap: 20px; padding: 28px; border: 1px solid var(--color-border, #e5e7eb); border-radius: 16px; background: white; }
+.project-apply-form .project-form-field { display: flex; flex-direction: column; gap: 8px; }
+.project-apply-form .project-form-field label { font-size: 13px; font-weight: 700; }
+.project-apply-form .project-form-field input, .project-apply-form .project-form-field textarea { width: 100%; box-sizing: border-box; padding: 12px 14px; border: 1px solid var(--color-border, #e5e7eb); border-radius: 9px; font: inherit; }
+.project-apply-form .project-form-field textarea { min-height: 140px; resize: vertical; }
+.project-applications-heading { margin-bottom: 25px; }
+.project-applications-heading > span { color: var(--color-primary, #237a4b); font-size: 11px; font-weight: 800; letter-spacing: 1px; }
+.project-applications-heading h1 { margin: 8px 0; font-size: 28px; }
+.project-applications-heading p { color: var(--color-text-muted, #64748b); }
+.project-applications-summary { display: flex; justify-content: space-between; padding: 16px; border-radius: 10px; background: var(--color-background, #f7f9f7); }
+.project-application-header { display: flex; justify-content: space-between; gap: 15px; }
+.project-application-header > div { display: flex; flex-direction: column; gap: 5px; }
+.project-application-header > div span { color: var(--color-text-muted, #64748b); font-size: 12px; }
+.project-application-card p { white-space: pre-wrap; line-height: 1.7; }
+.project-application-card small { color: var(--color-text-muted, #64748b); }
+.project-application-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.project-application-actions button { display: inline-flex; align-items: center; gap: 6px; padding: 8px 11px; border: 1px solid var(--color-border, #e5e7eb); border-radius: 8px; background: white; cursor: pointer; }
+.project-application-status { white-space: nowrap; font-size: 12px; font-weight: 700; }
+.project-applications-list { display: grid; gap: 12px; }
+.review-comment-section label { display: block; font-size: 14px; font-weight: 700; }
+.review-comment-section > span { display: block; margin-top: 6px; color: var(--color-text-muted, #64748b); font-size: 11px; text-align: right; }

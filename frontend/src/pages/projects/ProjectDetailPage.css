@@ -1,6 +1,6 @@
 
 /* ========================================
-   CampusLink - Project Detail
+   CampusConnect - Project Detail
    ======================================== */
 
 .project-detail-page {
@@ -679,4 +679,40 @@ a.project-apply-button {
 
 a.project-apply-button:hover {
   background: var(--color-primary-hover);
+}
+
+
+/* 모집자와 채팅하기 */
+.project-chat-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 18px;
+  padding: 13px 16px;
+  border: none;
+  border-radius: 10px;
+  background: var(--color-primary);
+  color: #FFFFFF;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.project-chat-button:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+}
+
+.project-chat-button:disabled {
+  background: #AAB8AE;
+  cursor: not-allowed;
+}
+
+.project-chat-error {
+  margin: 10px 0 0;
+  color: var(--color-danger);
+  font-size: 12px;
+  line-height: 1.5;
 }

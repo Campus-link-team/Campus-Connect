@@ -1,7 +1,17 @@
 
 import { getProjects, updateProject } from './projectStorage.js'
+import { addNotification } from './notificationStorage.js'
 
 const STORAGE_KEY = 'campuslink_project_applications'
+
+// 알림 생성 실패가 기존 기능에 영향을 주지 않도록 처리
+function createNotificationSafely(notificationData) {
+  try {
+    addNotification(notificationData)
+  } catch (error) {
+    console.error('프로젝트 알림 생성에 실패했습니다.', error)
+  }
+}
 
 // 지원 내역 불러오기
 export function getApplications() {
@@ -70,7 +80,7 @@ export function addApplication(applicationData) {
   const existingApplication = applications.find(
     (application) =>
       String(application.projectId) === String(applicationData.projectId) &&
-      application.applicantId === applicantId &&
+      String(application.applicantId) === String(applicantId) &&
       application.status !== '거절'
   )
 
@@ -81,12 +91,17 @@ export function addApplication(applicationData) {
   const newApplication = {
     id: Date.now(),
     projectId: project.id,
-    applicantId,
+
+    applicantId: String(applicantId),
+    applicantEmail: applicationData.applicantEmail || '',
+
     applicantName: applicationData.applicantName || '테스트 지원자',
     applicantDepartment:
       applicationData.applicantDepartment || '소속 정보 미등록',
+
     roleName: applicationData.roleName,
-    introduction: applicationData.introduction.trim(),
+    introduction: String(applicationData.introduction || '').trim(),
+
     status: '지원 대기',
     createdAt: new Date().toLocaleDateString('ko-KR'),
     createdOrder: Date.now(),
@@ -102,12 +117,36 @@ export function addApplication(applicationData) {
       STORAGE_KEY,
       JSON.stringify(updatedApplications)
     )
-
-    return newApplication
   } catch (error) {
     console.error('지원 내역 저장에 실패했습니다.', error)
-    throw new Error('지원 정보를 저장하지 못했습니다.')
+    throw new Error('지원 정보를 저장하지 못했습니다.', { cause: error })
   }
+
+  // 프로젝트 모집자에게 새 지원 알림
+  if (project.authorId || project.authorEmail) {
+    createNotificationSafely({
+      recipient: {
+        id: String(project.authorId || ''),
+        email: project.authorEmail || '',
+        name: project.authorName || '모집자',
+      },
+
+      actor: {
+        id: String(newApplication.applicantId),
+        email: newApplication.applicantEmail,
+        name: newApplication.applicantName,
+      },
+
+      type: 'project_application',
+      title: '새로운 프로젝트 지원이 도착했습니다.',
+      message: `${newApplication.applicantName}님이 '${project.title}' 프로젝트에 지원했습니다.`,
+
+      link: `/projects/${project.id}/applications`,
+      relatedId: newApplication.id,
+    })
+  }
+
+  return newApplication
 }
 
 // 지원 승인 또는 거절
@@ -133,7 +172,18 @@ export function updateApplicationStatus(applicationId, newStatus) {
     throw new Error('이미 처리된 지원 내역입니다.')
   }
 
-  // 거절은 프로젝트 인원에 영향을 주지 않음
+  const projects = getProjects()
+
+  const project = projects.find(
+    (item) =>
+      String(item.id) === String(application.projectId)
+  )
+
+  if (!project) {
+    throw new Error('프로젝트를 찾을 수 없습니다.')
+  }
+
+  // 지원 거절
   if (newStatus === '거절') {
     const updatedApplications = [...applications]
 
@@ -147,26 +197,39 @@ export function updateApplicationStatus(applicationId, newStatus) {
         STORAGE_KEY,
         JSON.stringify(updatedApplications)
       )
-
-      return updatedApplications[applicationIndex]
     } catch (error) {
       console.error('지원 상태 저장에 실패했습니다.', error)
-      throw new Error('지원 상태를 저장하지 못했습니다.')
+      throw new Error('지원 상태를 저장하지 못했습니다.', { cause: error })
     }
+
+    // 지원자에게 거절 알림
+    if (application.applicantId || application.applicantEmail) {
+      createNotificationSafely({
+        recipient: {
+          id: String(application.applicantId || ''),
+          email: application.applicantEmail || '',
+          name: application.applicantName || '지원자',
+        },
+
+        actor: {
+          id: String(project.authorId || ''),
+          email: project.authorEmail || '',
+          name: project.authorName || '모집자',
+        },
+
+        type: 'project_rejected',
+        title: '프로젝트 지원 결과가 도착했습니다.',
+        message: `'${project.title}' 프로젝트 지원이 거절되었습니다.`,
+
+        link: `/projects/${project.id}`,
+        relatedId: application.id,
+      })
+    }
+
+    return updatedApplications[applicationIndex]
   }
 
-  // 승인 처리
-  const projects = getProjects()
-
-  const project = projects.find(
-    (item) =>
-      String(item.id) === String(application.projectId)
-  )
-
-  if (!project) {
-    throw new Error('프로젝트를 찾을 수 없습니다.')
-  }
-
+  // 지원 승인
   if (project.status !== '모집 중') {
     throw new Error('현재 모집 중인 프로젝트가 아닙니다.')
   }
@@ -224,10 +287,34 @@ export function updateApplicationStatus(applicationId, newStatus) {
       STORAGE_KEY,
       JSON.stringify(updatedApplications)
     )
-
-    return updatedApplications[applicationIndex]
   } catch (error) {
     console.error('지원 상태 저장에 실패했습니다.', error)
-    throw new Error('지원 상태를 저장하지 못했습니다.')
+    throw new Error('지원 상태를 저장하지 못했습니다.', { cause: error })
   }
+
+  // 지원자에게 승인 알림
+  if (application.applicantId || application.applicantEmail) {
+    createNotificationSafely({
+      recipient: {
+        id: String(application.applicantId || ''),
+        email: application.applicantEmail || '',
+        name: application.applicantName || '지원자',
+      },
+
+      actor: {
+        id: String(project.authorId || ''),
+        email: project.authorEmail || '',
+        name: project.authorName || '모집자',
+      },
+
+      type: 'project_approved',
+      title: '프로젝트 지원이 승인되었습니다.',
+      message: `'${project.title}' 프로젝트 참여가 승인되었습니다.`,
+
+      link: `/projects/${project.id}`,
+      relatedId: application.id,
+    })
+  }
+
+  return updatedApplications[applicationIndex]
 }

@@ -1,0 +1,838 @@
+
+/* ========================================
+   CampusConnect - MyPage
+   ======================================== */
+
+.mypage {
+  min-height: calc(100vh - 80px);
+  padding: 40px 24px 80px;
+  background: var(--color-background);
+}
+
+.mypage-container {
+  width: 100%;
+  max-width: 1050px;
+  margin: 0 auto;
+}
+
+/* 페이지 제목 */
+
+.mypage-header {
+  margin-bottom: 27px;
+}
+
+.mypage-header > span {
+  color: var(--color-primary);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.mypage-header h1 {
+  margin: 9px 0;
+  color: var(--color-text);
+  font-size: 30px;
+  font-weight: 800;
+}
+
+.mypage-header p {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 14px;
+}
+
+/* 프로필 */
+
+.mypage-profile {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 27px;
+  margin-bottom: 20px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: white;
+  box-shadow: var(--shadow-sm);
+}
+
+.mypage-profile-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 76px;
+  height: 76px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+}
+
+.mypage-profile-info {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  min-width: 0;
+}
+
+.mypage-profile-name {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.mypage-profile-name h2 {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 21px;
+  font-weight: 800;
+}
+
+.mypage-profile-name > span {
+  padding: 5px 9px;
+  border-radius: 20px;
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+  font-size: 10px;
+  font-weight: 750;
+}
+
+.mypage-profile-info > p {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+.mypage-profile-info > p svg {
+  flex-shrink: 0;
+  color: var(--color-text-light);
+}
+
+/* 활동 통계 */
+
+.mypage-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 13px;
+  margin-bottom: 32px;
+}
+
+.mypage-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: white;
+  color: var(--color-text);
+  text-decoration: none;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.mypage-stat:hover {
+  border-color: var(--color-primary);
+  transform: translateY(-2px);
+}
+
+.mypage-stat svg {
+  color: var(--color-primary);
+}
+
+.mypage-stat span {
+  color: var(--color-text-muted);
+  font-size: 12px;
+}
+
+.mypage-stat strong {
+  color: var(--color-text);
+  font-size: 24px;
+  font-weight: 800;
+}
+
+/* 각 활동 영역 */
+
+.mypage-section {
+  margin-bottom: 30px;
+  scroll-margin-top: 100px;
+}
+
+.mypage-section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 14px;
+}
+
+.mypage-section-heading h2 {
+  margin: 0 0 6px;
+  color: var(--color-text);
+  font-size: 19px;
+  font-weight: 800;
+}
+
+.mypage-section-heading p {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.mypage-more {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  flex-shrink: 0;
+  color: var(--color-primary);
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.mypage-more:hover {
+  text-decoration: underline;
+}
+
+/* 활동 목록 */
+
+.mypage-item-list {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: white;
+  overflow: hidden;
+}
+
+.mypage-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+  padding: 16px 19px;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text);
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.mypage-item:last-child {
+  border-bottom: none;
+}
+
+.mypage-item:hover {
+  background: var(--color-background);
+}
+
+/* 목록 아이콘 또는 도서 이미지 */
+
+.mypage-item-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  border-radius: var(--radius-md);
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+  overflow: hidden;
+}
+
+.mypage-item-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 목록 정보 */
+
+.mypage-item-info {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.mypage-item-info strong {
+  color: var(--color-text);
+  font-size: 14px;
+  font-weight: 750;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mypage-item-info span {
+  color: var(--color-text-muted);
+  font-size: 11px;
+}
+
+/* 목록 오른쪽 정보 */
+
+.mypage-item-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.mypage-item-right strong {
+  color: var(--color-text);
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.mypage-item-right span {
+  color: var(--color-text-muted);
+  font-size: 11px;
+}
+
+.mypage-item > svg {
+  flex-shrink: 0;
+  color: var(--color-text-light);
+}
+
+/* 프로젝트 신청 내역 */
+
+.mypage-application-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text);
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.mypage-application-item:last-child {
+  border-bottom: none;
+}
+
+.mypage-application-item:hover {
+  background: var(--color-background);
+}
+
+.mypage-application-info {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+}
+
+.mypage-application-info > strong {
+  color: var(--color-text);
+  font-size: 14px;
+  font-weight: 750;
+}
+
+.mypage-application-info > span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--color-text-muted);
+  font-size: 11px;
+}
+
+.mypage-application-status {
+  flex-shrink: 0;
+  padding: 6px 11px;
+  border-radius: 30px;
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.mypage-application-status.is-pending {
+  background: #FFF5E8;
+  color: #B87925;
+}
+
+.mypage-application-status.is-approved {
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+}
+
+.mypage-application-status.is-rejected {
+  background: #FFF0F0;
+  color: var(--color-danger);
+}
+
+/* 빈 목록 */
+
+.mypage-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 36px 20px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: white;
+  text-align: center;
+}
+
+.mypage-empty > svg {
+  margin-bottom: 13px;
+  color: var(--color-text-light);
+}
+
+.mypage-empty > strong {
+  margin-bottom: 7px;
+  color: var(--color-text);
+  font-size: 14px;
+  font-weight: 750;
+}
+
+.mypage-empty > p {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.mypage-empty > a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  margin-top: 16px;
+  padding: 0 15px;
+  border-radius: var(--radius-md);
+  background: var(--color-primary);
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.mypage-empty > a:hover {
+  background: var(--color-primary-hover);
+}
+
+/* 안내 */
+
+.mypage-notice {
+  margin: 24px 0 0;
+  color: var(--color-text-light);
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+/* 모바일 */
+
+@media (max-width: 650px) {
+  .mypage {
+    padding: 25px 14px 50px;
+  }
+
+  .mypage-header h1 {
+    font-size: 25px;
+  }
+
+  .mypage-profile {
+    gap: 14px;
+    padding: 19px;
+  }
+
+  .mypage-profile-avatar {
+    width: 60px;
+    height: 60px;
+  }
+
+  .mypage-profile-name h2 {
+    font-size: 18px;
+  }
+
+  .mypage-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .mypage-stat {
+    padding: 15px;
+  }
+
+  .mypage-stat strong {
+    font-size: 21px;
+  }
+
+  .mypage-section-heading h2 {
+    font-size: 17px;
+  }
+
+  .mypage-item {
+    gap: 10px;
+    padding: 14px 12px;
+  }
+
+  .mypage-item-icon {
+    width: 42px;
+    height: 42px;
+  }
+
+  .mypage-item-info strong {
+    font-size: 12px;
+  }
+
+  .mypage-item-right strong {
+    font-size: 11px;
+  }
+
+  .mypage-application-item {
+    padding: 15px 12px;
+  }
+}
+
+
+/* 거래 내역 */
+.mypage-transaction-count {
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+
+.mypage-transaction-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 17px 20px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.mypage-transaction-item:last-child {
+  border-bottom: none;
+}
+
+.mypage-transaction-icon {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  border-radius: 13px;
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+}
+
+.mypage-transaction-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mypage-transaction-title {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.mypage-transaction-title > strong {
+  overflow: hidden;
+  font-size: 14px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mypage-transaction-title > span {
+  padding: 3px 7px;
+  border-radius: 5px;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.mypage-transaction-seller {
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+}
+
+.mypage-transaction-buyer {
+  background: var(--color-blue-soft);
+  color: var(--color-blue);
+}
+
+.mypage-transaction-info > span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--color-text-muted);
+  font-size: 11px;
+}
+
+.mypage-transaction-right {
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mypage-transaction-right > strong {
+  font-size: 14px;
+}
+
+.mypage-transaction-completed {
+  color: var(--color-success);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.mypage-review-completed,
+.mypage-review-pending {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.mypage-review-completed {
+  color: var(--color-primary);
+}
+
+.mypage-review-pending {
+  color: var(--color-warning);
+}
+
+@media (max-width: 600px) {
+  .mypage-transaction-item {
+    gap: 10px;
+    padding: 15px 12px;
+  }
+
+  .mypage-transaction-icon {
+    width: 38px;
+    height: 38px;
+  }
+
+  .mypage-transaction-title > strong {
+    max-width: 170px;
+    font-size: 12px;
+  }
+
+  .mypage-transaction-right > strong {
+    font-size: 12px;
+  }
+}
+
+
+/* 거래 평가 작성 버튼 */
+.mypage-review-write {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 10px;
+  border-radius: 7px;
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+  font-size: 11px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.mypage-review-write:hover {
+  background: #DCEFE1;
+}
+
+
+/* 매너 온도 */
+.mypage-manner-card {
+  margin-bottom: 28px;
+  padding: 25px;
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  background: var(--color-surface);
+}
+
+.mypage-manner-top {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.mypage-manner-icon {
+  width: 52px;
+  height: 52px;
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  border-radius: 15px;
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+}
+
+.mypage-manner-info {
+  flex: 1;
+}
+
+.mypage-manner-info > span {
+  color: var(--color-primary);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.mypage-manner-info h2 {
+  margin: 5px 0;
+  font-size: 17px;
+}
+
+.mypage-manner-info p {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 11px;
+}
+
+.mypage-manner-value {
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mypage-manner-value strong {
+  color: var(--color-primary);
+  font-size: 27px;
+  font-weight: 800;
+}
+
+.mypage-manner-value span {
+  color: var(--color-text-muted);
+  font-size: 11px;
+}
+
+.mypage-manner-meter {
+  height: 10px;
+  overflow: hidden;
+  margin-top: 22px;
+  border-radius: 20px;
+  background: var(--color-background);
+}
+
+.mypage-manner-meter-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: var(--color-primary);
+  transition: width 0.3s;
+}
+
+.mypage-manner-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 9px;
+  color: var(--color-text-light);
+  font-size: 10px;
+}
+
+/* 받은 거래 후기 */
+.mypage-review-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mypage-review-card {
+  padding: 19px;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  background: var(--color-surface);
+}
+
+.mypage-review-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.mypage-review-header > div:first-child {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.mypage-review-header strong {
+  font-size: 14px;
+}
+
+.mypage-review-header span {
+  color: var(--color-text-muted);
+  font-size: 11px;
+}
+
+.mypage-review-rating {
+  color: #D99A25;
+  font-size: 14px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.mypage-review-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 14px;
+}
+
+.mypage-review-tags span {
+  padding: 6px 9px;
+  border-radius: 7px;
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+  font-size: 11px;
+}
+
+.mypage-review-comment {
+  margin: 13px 0;
+  color: var(--color-text);
+  font-size: 13px;
+  line-height: 1.7;
+  white-space: pre-wrap;
+}
+
+.mypage-review-card time {
+  display: block;
+  margin-top: 12px;
+  color: var(--color-text-light);
+  font-size: 10px;
+}
+
+@media (max-width: 600px) {
+  .mypage-manner-card {
+    padding: 19px 15px;
+  }
+
+  .mypage-manner-top {
+    gap: 10px;
+  }
+
+  .mypage-manner-icon {
+    width: 42px;
+    height: 42px;
+  }
+
+  .mypage-manner-info h2 {
+    font-size: 14px;
+  }
+
+  .mypage-manner-info p {
+    font-size: 10px;
+  }
+
+  .mypage-manner-value strong {
+    font-size: 21px;
+  }
+
+  .mypage-review-card {
+    padding: 15px;
+  }
+}
