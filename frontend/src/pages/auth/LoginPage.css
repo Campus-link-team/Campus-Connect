@@ -1,0 +1,194 @@
+
+/* ========================================
+   CampusConnect - Login Page
+   ======================================== */
+
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: calc(100vh - 80px);
+  padding: 75px 20px 90px;
+  background: var(--color-background);
+}
+
+.login-container {
+  width: 100%;
+  max-width: 450px;
+  padding: 38px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+}
+
+/* 제목 */
+
+.login-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 34px;
+  text-align: center;
+}
+
+.login-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  margin-bottom: 18px;
+  border-radius: 18px;
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+}
+
+.login-header h1 {
+  margin: 0 0 11px;
+  color: var(--color-text);
+  font-size: 25px;
+  font-weight: 800;
+}
+
+.login-header p {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+/* 로그인 폼 */
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 21px;
+}
+
+.login-field {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.login-field label {
+  color: var(--color-text);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* 입력창 */
+
+.login-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  width: 100%;
+  height: 51px;
+  padding: 0 15px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: white;
+  transition: border-color 0.2s;
+}
+
+.login-input-wrap:focus-within {
+  border-color: var(--color-primary);
+}
+
+.login-input-wrap svg {
+  flex-shrink: 0;
+  color: var(--color-text-light);
+}
+
+.login-input-wrap input {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--color-text);
+  font-size: 13px;
+}
+
+.login-input-wrap input::placeholder {
+  color: var(--color-text-light);
+}
+
+/* 오류 메시지 */
+
+.login-error {
+  padding: 12px 14px;
+  border-radius: var(--radius-sm);
+  background: #FFF0F0;
+  color: var(--color-danger);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+/* 로그인 버튼 */
+
+.login-submit {
+  width: 100%;
+  height: 52px;
+  margin-top: 5px;
+  border: none;
+  border-radius: var(--radius-md);
+  background: var(--color-primary);
+  color: white;
+  font-size: 15px;
+  font-weight: 750;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.login-submit:hover:not(:disabled) {
+  background: var(--color-primary-hover);
+}
+
+.login-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* 회원가입 이동 */
+
+.login-signup-link {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 7px;
+  margin-top: 27px;
+  padding-top: 23px;
+  border-top: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  font-size: 12px;
+}
+
+.login-signup-link a {
+  color: var(--color-primary);
+  font-weight: 750;
+  text-decoration: none;
+}
+
+.login-signup-link a:hover {
+  text-decoration: underline;
+}
+
+/* 모바일 */
+
+@media (max-width: 520px) {
+  .login-page {
+    padding: 35px 14px 55px;
+  }
+
+  .login-container {
+    padding: 28px 21px;
+  }
+
+  .login-header h1 {
+    font-size: 22px;
+  }
+}

@@ -21,7 +21,7 @@ function HomePage() {
             <p>
               중고 도서 거래부터 프로젝트 팀원 모집까지
               <br />
-              한 곳에서 편리하게, CampusLink.
+              한 곳에서 편리하게, CampusConnect.
             </p>
 
             <div className="hero-buttons">
@@ -38,7 +38,7 @@ function HomePage() {
           {/* 메인 비주얼 */}
           <div
             className="hero-visual"
-            aria-label="CampusLink 서비스 안내"
+            aria-label="CampusConnect 서비스 안내"
           >
             <div className="visual-card visual-card-back">
               <span className="visual-icon">📚</span>
@@ -94,17 +94,17 @@ function HomePage() {
           <div>
             <h2>캠퍼스 생활을 더 편리하게</h2>
             <p>
-              CampusLink에서 필요한 연결을 시작해 보세요.
+              CampusConnect에서 필요한 연결을 시작해 보세요.
             </p>
           </div>
 
-          <span className="banner-mark">CampusLink</span>
+          <span className="banner-mark">CampusConnect</span>
         </section>
       </main>
 
       {/* 하단 푸터 */}
       <footer className="footer">
-        <span>CampusLink</span>
+        <span>CampusConnect</span>
         <span>
           대학생을 위한 중고 도서 거래 &amp; 프로젝트 모집 플랫폼
         </span>

@@ -50,7 +50,7 @@ export function toggleFavoriteBook(bookId) {
     return !isAlreadyFavorite
   } catch (error) {
     console.error('찜 목록 저장에 실패했습니다.', error)
-    throw new Error('찜 상태를 저장하지 못했습니다.')
+    throw new Error('찜 상태를 저장하지 못했습니다.', { cause: error })
   }
 }
 

@@ -35,7 +35,8 @@ function saveBooks(books) {
   } catch (error) {
     console.error('책 목록 저장에 실패했습니다.', error)
     throw new Error(
-      '저장 공간이 부족하거나 상품 정보를 저장할 수 없습니다.'
+      '저장 공간이 부족하거나 상품 정보를 저장할 수 없습니다.',
+      { cause: error },
     )
   }
 }

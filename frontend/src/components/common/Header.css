@@ -1,6 +1,6 @@
 
 /* ========================================
-   CampusLink - Common Header
+   CampusConnect - Common Header
    ======================================== */
 
 .site-header {
@@ -242,3 +242,69 @@
     font-size: 13px;
   }
 }
+
+
+/* 채팅 메뉴 */
+.site-header__chat-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* 읽지 않은 메시지 배지 */
+.site-header__chat-badge {
+  min-width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 5px;
+  border-radius: 20px;
+  background: var(--color-danger);
+  color: #FFFFFF;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+
+/* 채팅 메뉴 */
+.site-header__chat-link,
+.site-header__notification-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* 채팅 읽지 않은 메시지 배지 */
+.site-header__chat-badge {
+  min-width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 5px;
+  border-radius: 20px;
+  background: var(--color-danger);
+  color: #FFFFFF;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+/* 읽지 않은 알림 배지 */
+.site-header__notification-badge {
+  min-width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 5px;
+  border-radius: 20px;
+  background: var(--color-danger);
+  color: #FFFFFF;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1;
+}
+
