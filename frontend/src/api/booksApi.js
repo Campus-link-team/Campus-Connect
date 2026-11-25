@@ -3,7 +3,7 @@ import api from './apiClient.js'
 export const BOOK_STATUS = {
   '판매 중': 'ON_SALE',
   '예약 중': 'RESERVED',
-  '판매 완료': 'SOLD',
+  '거래 완료': 'SOLD',
 }
 
 export const BOOK_STATUS_LABEL = Object.fromEntries(

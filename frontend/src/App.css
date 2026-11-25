@@ -483,6 +483,8 @@
 .book-detail-owner-actions { display: flex; flex-direction: column; gap: 10px; }
 .book-detail-owner-actions label { margin-top: 5px; font-size: 12px; font-weight: 700; }
 .book-detail-owner-actions select { min-height: 40px; padding: 8px; border: 1px solid var(--color-border, #e5e7eb); border-radius: 8px; background: white; }
+.book-detail-completion-options { display: flex; flex-direction: column; gap: 9px; padding: 14px; border: 1px solid var(--color-border, #e5e7eb); border-radius: 10px; background: var(--color-background, #f7f9f7); }
+.book-detail-buyer-hint { margin: 0; color: var(--color-text-muted, #64748b); font-size: 11px; line-height: 1.6; }
 .book-detail-edit { color: var(--color-primary, #237a4b); border: 1px solid var(--color-border, #e5e7eb); background: white; }
 .book-detail-delete { color: #b42318; border: 1px solid #f0c9c5; background: white; }
 .book-detail-review { margin-top: 22px; padding: 22px; border: 1px solid var(--color-border, #e5e7eb); border-radius: 14px; background: white; }
