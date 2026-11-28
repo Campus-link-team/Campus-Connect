@@ -1,15 +1,17 @@
 # Campus-Connect
 
-교내 중고책 거래와 프로젝트·활동 모집을 한곳에서 이용하는 대학 캡스톤 웹 서비스입니다. 현재 저장소는 개발을 시작하기 위한 협업 구조와 데이터 모델 초안을 담고 있습니다.
+교내 중고책 거래와 프로젝트 팀원 모집을 한곳에서 이용하는 대학 캡스톤 웹 서비스입니다. 백엔드(Spring Boot)와 프론트엔드(React, Vite)로 구성되며, 로컬에서 함께 실행해 사용합니다.
 
 ## 핵심 기능
 
-- 학교 이메일을 이용한 회원 인증
-- 중고책 판매글 등록·조회, 찜, 거래 상태 관리와 거래 후기
-- 판매글을 중심으로 한 실시간 채팅 및 메시지 저장
-- 프로젝트·활동 모집글 작성과 정원 기준 선착순 신청
+- 학교 이메일(@syu.ac.kr) 인증 후 회원가입과 로그인 (인증 코드는 Mock 방식)
+- 중고책 판매글 등록, 조회, 키워드 검색, 찜, 판매 상태 관리
+- 거래 완료 시 채팅한 회원 중 구매자 지정, 지정된 구매자의 판매자 후기와 평점
+- 판매글을 중심으로 한 채팅과 메시지 저장
+- 프로젝트 모집글 작성, 작성자 승인 방식의 지원, 정원 도달 시 자동 마감과 직접 마감
+- 마이페이지에서 내 판매글, 모집글, 지원 내역, 찜 목록 확인
 
-이미지 업로드는 현재 구현 범위에서 제외합니다.
+이미지 업로드와 외부 배포는 이번 범위에서 제외했고, 결과는 로컬 실행 화면으로 시연합니다.
 
 ## 팀 역할
 
@@ -22,14 +24,14 @@
 
 세부 담당 기능은 팀 논의와 작업 이슈에서 정합니다.
 
-## 예정 기술 스택
+## 기술 스택
 
 | 영역 | 기본안 |
 | --- | --- |
 | 프론트엔드 | React, Vite, JavaScript |
 | 백엔드 | Spring Boot, Java 17, Gradle, Spring Web, JPA, Spring Security, JWT |
 | 데이터베이스 | MySQL 8.x |
-| 실시간 채팅 | WebSocket 기반 구현 예정 |
+| 채팅 | 서버는 WebSocket(STOMP)과 REST를 제공, 화면은 REST 주기 조회로 새 메시지 표시 |
 
 ## 디렉터리
 
@@ -49,7 +51,33 @@ Campus-Connect/
 └── README.md
 ```
 
-`frontend/`와 `backend/`는 초기 구조를 표시하는 `.gitkeep`만 있습니다. 실행 방법은 각 앱의 초기 설정이 끝나면 추가합니다.
+## 실행 방법
+
+준비 환경은 JDK 17, MySQL 8.x, Node.js 22.22.0 이상입니다.
+
+1. MySQL에 데이터베이스를 만듭니다.
+
+   ```sql
+   CREATE DATABASE IF NOT EXISTS campus_connect CHARACTER SET utf8mb4;
+   ```
+
+2. `backend/src/main/resources/application-local.yml.example`을 같은 폴더에 `application-local.yml`로 복사하고, 본인의 MySQL 계정 정보를 입력합니다. 이 파일은 `.gitignore`에 포함되어 있으니 GitHub나 메신저에 올리지 않습니다.
+3. 백엔드를 실행합니다. 기본 주소는 `http://localhost:8080`입니다.
+
+   ```bash
+   cd backend
+   ./gradlew bootRun          # Windows: .\gradlew.bat bootRun
+   ```
+
+4. 새 터미널에서 프론트엔드를 실행하고 `http://localhost:5173`에 접속합니다. 개발 서버가 `/api` 요청을 8080으로 전달합니다.
+
+   ```bash
+   cd frontend
+   npm ci
+   npm run dev
+   ```
+
+API 연동 범위와 알려진 제약은 `frontend/INTEGRATION_GUIDE_KO.md`를 참고하세요.
 
 ## 브랜치와 PR
 

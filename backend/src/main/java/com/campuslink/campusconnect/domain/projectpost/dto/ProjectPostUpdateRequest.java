@@ -14,6 +14,7 @@ public class ProjectPostUpdateRequest {
     private String recruitmentStatus;
     private int currentApplicantCount;
     private String category;
+    private LocalDate startDate;
     private LocalDate endDate;
     private String location;
     private String qualifications;
