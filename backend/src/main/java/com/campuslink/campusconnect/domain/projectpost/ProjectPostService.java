@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service //해당 클래스가 비즈니스 로직을 처리하는 서비스 계층(Service Layer)의 컴포넌트임을 명시하는 데 사용
@@ -37,6 +38,9 @@ public class ProjectPostService {
                 requestDto.getLocation(),
                 user // ★ 변경된 부분
         );
+
+        validateEndDate(requestDto.getEndDate());
+        post.updateSchedule(requestDto.getStartDate(), requestDto.getEndDate());
 
         // 4. DB에 저장
         projectPostRepository.save(post);
@@ -104,6 +108,10 @@ public class ProjectPostService {
                 request.getCategory(),
                 request.getLocation()
         );
+        if (request.getEndDate() != null && !request.getEndDate().equals(projectPost.getEndDate())) {
+            validateEndDate(request.getEndDate());
+        }
+        projectPost.updateSchedule(request.getStartDate(), request.getEndDate());
 
         return projectPost.getId();
     }
@@ -270,6 +278,13 @@ public class ProjectPostService {
         return projectApplicationRepository.findMineWithPost(userId).stream()
                 .map(MyApplicationResponse::from)
                 .toList();
+    }
+
+    // 모집 마감일은 오늘 이후여야 함 (요구사항 FR-012)
+    private void validateEndDate(LocalDate endDate) {
+        if (endDate != null && endDate.isBefore(LocalDate.now())) {
+            throw new IllegalArgumentException("모집 마감일은 오늘 이후로 입력해 주세요.");
+        }
     }
 
     // 모집글 작성자 본인인지 확인 (아니면 403)

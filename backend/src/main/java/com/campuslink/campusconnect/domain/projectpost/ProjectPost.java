@@ -78,6 +78,12 @@ public class ProjectPost {
         this.category = category;
         this.location = location;
 }
+    // 활동 시작일과 모집 마감일 (null이면 기존 값 유지)
+    public void updateSchedule(LocalDate startDate, LocalDate endDate) {
+        if (startDate != null) this.startDate = startDate;
+        if (endDate != null) this.endDate = endDate;
+    }
+
     // 지원자가 발생했을 때 호출할 메서드
     public void apply() {
         // 1. 이미 정원이 꽉 찼거나 마감되었는지 확인

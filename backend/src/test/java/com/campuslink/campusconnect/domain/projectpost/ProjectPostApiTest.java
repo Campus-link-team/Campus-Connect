@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.time.LocalDate;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.not;
@@ -142,5 +143,33 @@ class ProjectPostApiTest {
         mockMvc.perform(get("/api/v1/users/me/applications").header("Authorization", token(other)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data", hasSize(0)));
+    }
+
+    @Test
+    void 모집글_등록과_수정에_마감일이_저장되고_지난_날짜는_400() throws Exception {
+        String end = LocalDate.now().plusDays(7).toString();
+        mockMvc.perform(post("/api/v1/projects").header("Authorization", token(other))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"title\":\"마감일 테스트\",\"content\":\"내용\",\"capacity\":2,\"category\":\"개발\",\"location\":\"온라인\",\"startDate\":\"" + end + "\",\"endDate\":\"" + end + "\"}"))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(get("/api/v1/users/me/projects").header("Authorization", token(other)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data[0].endDate").value(end))
+                .andExpect(jsonPath("$.data[0].startDate").value(end));
+
+        String past = LocalDate.now().minusDays(1).toString();
+        mockMvc.perform(post("/api/v1/projects").header("Authorization", token(other))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"title\":\"지난 날짜\",\"content\":\"내용\",\"capacity\":2,\"category\":\"개발\",\"endDate\":\"" + past + "\"}"))
+                .andExpect(status().isBadRequest());
+
+        String later = LocalDate.now().plusDays(14).toString();
+        mockMvc.perform(patch("/api/v1/projects/" + post.getId()).header("Authorization", token(writer))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"title\":\"캡스톤 팀원 모집\",\"content\":\"백엔드 1명 구해요\",\"capacity\":2,\"category\":\"팀플\",\"location\":\"온라인\",\"endDate\":\"" + later + "\"}"))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/api/v1/projects/" + post.getId()))
+                .andExpect(jsonPath("$.data.endDate").value(later));
     }
 }

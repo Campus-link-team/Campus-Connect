@@ -14,8 +14,12 @@ export function mapProject(raw = {}) {
     authorName: raw.writerNickname || '',
     location: raw.location || '',
     deadline: raw.endDate || '',
+    startDate: raw.startDate || '',
   }
 }
+
+// 빈 날짜는 null로 보내 서버가 값을 비워 두거나 기존 값을 유지하게 한다.
+const dateOrNull = (value) => (value ? String(value) : null)
 
 function mapList(value) {
   return Array.isArray(value) ? value.map(mapProject) : []
@@ -33,13 +37,14 @@ export const projectsApi = {
     return result ? mapProject(result) : null
   },
   async create(data) {
-    // develop 브랜치의 현재 생성 DTO가 실제로 받는 필드만 전달합니다.
     return api.post('/projects', {
       title: String(data.title || '').trim(),
       content: String(data.content ?? data.description ?? '').trim(),
       capacity: Number(data.capacity ?? data.maxMembers),
       category: data.category,
       location: String(data.location || '').trim(),
+      startDate: dateOrNull(data.startDate),
+      endDate: dateOrNull(data.endDate),
     })
   },
   async update(id, data) {
@@ -49,6 +54,8 @@ export const projectsApi = {
       capacity: Number(data.capacity ?? data.maxMembers),
       category: data.category,
       location: String(data.location || '').trim(),
+      startDate: dateOrNull(data.startDate),
+      endDate: dateOrNull(data.endDate),
     }
     await api.patch(`/projects/${Number(id)}`, payload)
     return this.get(id)
