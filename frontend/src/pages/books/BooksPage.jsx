@@ -4,7 +4,7 @@ import { Search, Plus, BookOpen } from 'lucide-react'
 import { booksApi } from '../../api/booksApi.js'
 import './BooksPage.css'
 
-const saleFilters = ['전체', '판매 중', '예약 중', '판매 완료']
+const saleFilters = ['전체', '판매 중', '예약 중', '거래 완료']
 
 function BooksPage() {
   const [search, setSearch] = useState('')
@@ -67,7 +67,7 @@ function BooksPage() {
         {loading ? <div className="books-empty">도서 목록을 불러오는 중입니다...</div> : filteredBooks.length ? (
           <div className="books-grid">{filteredBooks.map((book) => <Link to={`/books/${book.id}`} className="book-card" key={book.id}>
             <div className={`book-card__image book-card__image--green`}><BookOpen size={48} strokeWidth={1.3} /><span className="book-card__image-title">{book.title}</span></div>
-            <div className="book-card__info"><span className={`book-card__status ${book.status === '판매 완료' ? 'is-completed' : book.status === '예약 중' ? 'is-reserved' : 'is-selling'}`}>{book.status}</span>
+            <div className="book-card__info"><span className={`book-card__status ${book.status === '거래 완료' ? 'is-completed' : book.status === '예약 중' ? 'is-reserved' : 'is-selling'}`}>{book.status}</span>
               <h3>{book.title}</h3><span className="book-card__department">{book.author} · {book.categoryLabel}</span><strong>{Number(book.price).toLocaleString('ko-KR')}원</strong>
               <small>{book.seller?.nickname || '판매자'} · {book.tradePlace || '거래 장소 협의'}</small></div>
           </Link>)}</div>

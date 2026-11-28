@@ -6,7 +6,7 @@ import { chatsApi } from '../../api/chatsApi.js'
 import { useAuth } from '../../context/useAuth.js'
 import './ProjectApplicationsPage.css'
 
-const statusLabel = { PENDING: '검토 중', APPROVED: '승인', REJECTED: '거절' }
+const statusLabel = { PENDING: '지원 대기', APPROVED: '승인', REJECTED: '거절' }
 function ProjectApplicationsPage() {
   const { projectId } = useParams(); const navigate = useNavigate(); const { user, isLoggedIn, isLoading } = useAuth()
   const [project, setProject] = useState(null); const [applications, setApplications] = useState([]); const [error, setError] = useState(''); const [busyId, setBusyId] = useState(null)

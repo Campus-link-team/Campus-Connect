@@ -9,6 +9,7 @@ function SignupPage() {
   const navigate = useNavigate()
   const { register } = useAuth()
   const [nickname, setNickname] = useState('')
+  const [department, setDepartment] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -103,7 +104,7 @@ function SignupPage() {
     if (password !== confirmPassword) return setError('비밀번호 확인이 일치하지 않습니다.')
     try {
       setBusy(true)
-      await register({ email, password, nickname })
+      await register({ email, password, nickname, department })
       navigate('/login', { state: { registeredEmail: email.trim().toLowerCase() } })
     } catch (e) {
       setError(e.message || '회원가입에 실패했습니다.')
@@ -131,6 +132,23 @@ function SignupPage() {
               </div>
               <button type="button" className="signup-verify-send" onClick={handleCheckNickname} disabled={busy || !nickname.trim()}>중복 확인</button>
             </div>
+          </div>
+
+          <div className="signup-field">
+            <label htmlFor="signup-department">학과 (선택)</label>
+            <div className="signup-input-wrap">
+              <GraduationCap size={18} />
+              <input
+                id="signup-department"
+                type="text"
+                value={department}
+                onChange={(e) => setDepartment(e.target.value)}
+                maxLength={50}
+                placeholder="예: 컴퓨터공학과"
+                autoComplete="organization-title"
+              />
+            </div>
+            <small className="signup-field-hint">입력하지 않아도 가입할 수 있습니다. (최대 50자)</small>
           </div>
 
           <div className="signup-field">

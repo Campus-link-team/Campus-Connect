@@ -186,7 +186,7 @@ export function completeBookTransaction(book, seller, buyer) {
   try {
     // 상품 판매 상태도 완료로 변경
     updateBook(book.id, {
-      status: '판매 완료',
+      status: '거래 완료',
       transactionId: transaction.id,
       buyerId: selectedBuyer.id,
       buyerEmail: selectedBuyer.email,
